@@ -1,0 +1,37 @@
+spring:
+  application:
+    name: DepartmentServiceOAuth2
+
+    
+  cloud:
+    consul:
+      port: 8543
+      host: consul
+      scheme: https
+
+      config:
+        enabled: true
+        format: YAML
+
+        
+    vault:
+      host: vault
+      port: 8200
+      scheme: https
+      # Vault AppRole authentication scheme
+      authentication: approle
+      app-role:
+        role-id: 36faa4bb-3d81-95e4-b191-27fff3ae844e
+        # the secret id should normally be injected into the environment of the application (for security reasons)
+        # secret-id: 07d487ef-bdca-582a-3dba-80f71c2f0f50
+        # getting secret ID from OS environment
+        secret-id: ${VAULT_APPROLE_SECRET_ID}
+ 
+      # Vault key-value store
+      generic:
+        enabled: true
+        backend: secret
+        profile-separator: '/'
+        default-context: application
+        application-name: DepartmentServiceOAuth2
+        

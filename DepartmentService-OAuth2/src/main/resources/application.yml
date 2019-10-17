@@ -1,0 +1,147 @@
+#--------------------------------------
+# Server Configuration
+#--------------------------------------
+
+server:
+  port: 8090
+  ssl:
+    enabled: true
+  # this is the unsecured http port on a second tomcat connector
+  http:
+    port: 8082
+    
+    # classpath reference only works when running the JAR
+    # this configuration should go to vault
+    # trust-store: classpath:/truststore.jks
+    # trust-store-password: 
+    # trust-store-type: JKS
+    # classpath reference only works when running the JAR
+    # this configuration should go to vault
+    # key-store: classpath:/department-keystore.p12
+    # key-store-password: 
+    # key-store-type: PKCS12
+
+spring:
+
+#--------------------------------------
+# Persistence Configuration
+#--------------------------------------
+
+  datasource:
+    # url: jdbc:h2:mem:demo
+    url: jdbc:postgresql://demodb:5432/demo?ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory
+    # this configuration should go to vault
+    username: admin
+    password: admin01
+    # driverClassName: org.h2.Driver
+  jpa:
+    properties:
+      hibernate: 
+        jdbc:
+          lob:
+            non_contextual_creation: true
+
+#--------------------------------------
+# Consul Configuration
+#--------------------------------------
+
+  cloud:
+    consul:
+      discovery:
+        enabled: false
+        scheme: http
+        instanceId: ${spring.application.name}
+        hostname: department-service.default.svc.cluster.local
+        port: 8082
+        healthCheckPath: /actuator/health
+        healthCheckInterval: 20s
+
+
+#--------------------------------------
+# Vault CA Configuration
+#--------------------------------------
+
+# This is for the automated certificate request and rotation with Vault
+pki:
+  role: server
+  common-name: department-service
+  alt-names: 
+  - department-service.default.svc.cluster.local
+  - department-service-oauth2
+  - department-service-oauth2.default.svc.cluster.local
+
+#--------------------------------------
+# Rate Limiting Configuration
+#--------------------------------------
+
+legendlime:
+  ratelimit:
+    average: 50d
+
+#--------------------------------------
+# Tracing Configuration
+#--------------------------------------
+
+opentracing:
+  jaeger:
+    log-spans: false
+    udp-sender:
+      host: jaeger-agent
+      port: 6831
+
+#--------------------------------------
+# Generic Security Configuration
+#--------------------------------------
+
+# Can be set to false to disable security during local development
+rest:
+  security:
+    enabled: true
+    api-matcher: /v1/**
+    cors:
+      allowed-origins: "*"
+      allowed-headers: "*"
+      allowed-methods: GET,POST,PUT,PATCH,DELETE,OPTIONS
+      max-age: 3600
+
+    issuer-uri: https://keycloak:8443/auth/realms/Demo
+
+#--------------------------------------
+# OAuth2 Configuration
+#--------------------------------------
+
+security:
+  oauth2:
+    resource:
+      id: department-service
+      token-info-uri: ${rest.security.issuer-uri}/protocol/openid-connect/token/introspect
+      user-info-uri: ${rest.security.issuer-uri}/protocol/openid-connect/userinfo
+      # Your public Key may be different, remember to replace this one 
+      jwt:
+        key-value: -----BEGIN PUBLIC KEY-----MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAq0glnf0bnjjZ8izkCa93VLUIh4XKPrKmPFxqEuSbkHbHwCcSoqQGN52QHg1SSuRu6k37Eetsucw14MF+s1W0cJB8RZmgoS26OZ9IyX4LI6xbksv0/RCwWgRHfsWV7DFWnCOx9xAt6U2I+6i2P7wb9saPZdAu3xj/o41jv6uz+1clhfgLYevsWjLH7wfLG94mPtquUrKyLYRcHc5zORetYGgD6KJb+yIhOVr6KefrqwkSfXRQcwnGBbPqKOFthQfAKnN8Ta7FtMcb6/AEjx5//kA6xPmBkHP9akCPVg9DNkST0QMqY21pNFmMFx5/wC2yf9AolwLFnQDOHz73MNwp2wIDAQAB-----END PUBLIC KEY-----
+
+# Required for micro services that needs to call another secured micro service call
+# These parameters are not needed if this service acts only as a resource server
+    client:
+      client-id: department-service
+      # This one must go to Vault secrets
+      client-secret: 3a8cac7a-3136-4a2b-9b71-ae425b9ebfd4
+      user-authorization-uri: ${rest.security.issuer-uri}/protocol/openid-connect/auth
+      access-token-uri: ${rest.security.issuer-uri}/protocol/openid-connect/token
+      scope: openid
+      grant-type: client_credentials
+
+#--------------------------------------
+# Logging Configuration
+#--------------------------------------
+
+logging:
+  level:
+    org:
+      springframework:
+        boot:
+          autoconfigure:
+            logging: INFO
+        security: DEBUG
+      legendlime: DEBUG
+      root: INFO 
