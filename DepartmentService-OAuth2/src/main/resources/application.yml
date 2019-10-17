@@ -10,17 +10,6 @@ server:
   http:
     port: 8082
     
-    # classpath reference only works when running the JAR
-    # this configuration should go to vault
-    # trust-store: classpath:/truststore.jks
-    # trust-store-password: 
-    # trust-store-type: JKS
-    # classpath reference only works when running the JAR
-    # this configuration should go to vault
-    # key-store: classpath:/department-keystore.p12
-    # key-store-password: 
-    # key-store-type: PKCS12
-
 spring:
 
 #--------------------------------------
@@ -31,9 +20,8 @@ spring:
     # url: jdbc:h2:mem:demo
     url: jdbc:postgresql://demodb:5432/demo?ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory
     # this configuration should go to vault
-    username: admin
-    password: admin01
-    # driverClassName: org.h2.Driver
+    # username: 
+    # password: 
   jpa:
     properties:
       hibernate: 
