@@ -125,6 +125,7 @@ security:
 
 logging:
   level:
+    io.opentracing.contrib: error
     org:
       springframework:
         boot:
@@ -133,3 +134,4 @@ logging:
         security: INFO
       legendlime: INFO
       root: INFO 
+      

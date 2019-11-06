@@ -59,6 +59,7 @@ public class ClientHttpRequestFactoryBean {
 
 		HttpClientBuilder clientBuilder = HttpClientBuilder.create();
 		HttpClient httpClient = clientBuilder.setSSLSocketFactory(socketFactory).build();
+		
 		this.factory = new HttpComponentsClientHttpRequestFactory(httpClient);
 		logger.debug("Renewed HTTP request factory with certificate: {}", this.keyStore.getCertificate("vault") );
 	}
