@@ -1,4 +1,4 @@
-package de.legendlime.departmentService.schedule;
+package de.legendlime.departmentService.config.schedule;
 
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
