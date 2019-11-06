@@ -113,7 +113,7 @@ public class SecurityConfigurer extends ResourceServerConfigurerAdapter {
   @ConditionalOnProperty(prefix = "legendlime.opa", name = "enabled", havingValue = "true")
   public AccessDecisionManager accessDecisionManager() {
       List<AccessDecisionVoter<? extends Object>> decisionVoters = Arrays
-              .asList(new OPAVoter(opaProperties.getOpaUrl(), restTemplateBean.getRestTemplate()));
+              .asList(new OPAVoter(opaProperties.getOpaUrl(), restTemplateBean));
       return new UnanimousBased(decisionVoters);
   }
 

@@ -33,7 +33,7 @@ public class RestTemplateBean {
 	}
 
 	public RestTemplateBean(RestTemplateBuilder restTemplateBuilder, ClientHttpRequestFactoryBean factory) {
-		renew(restTemplateBuilder, factory);
+		this.restTemplate = restTemplateBuilder.requestFactory(new SecureRequestFactorySupplier(factory)).build();
 	}
 	
 	public void renew(RestTemplateBuilder restTemplateBuilder, ClientHttpRequestFactoryBean factory) {

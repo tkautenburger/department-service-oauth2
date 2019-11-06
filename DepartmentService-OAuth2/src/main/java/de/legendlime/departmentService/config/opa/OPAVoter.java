@@ -10,16 +10,16 @@ import org.springframework.security.access.AccessDecisionVoter;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.FilterInvocation;
-import org.springframework.web.client.RestTemplate;
+import de.legendlime.departmentService.config.RestTemplateBean;
 
 public class OPAVoter implements AccessDecisionVoter<Object> {
 
-    private RestTemplate restTemplate;	
+    private RestTemplateBean restTemplateBean;	
     private String opaUrl;
 
-    public OPAVoter(String opaUrl, RestTemplate restTemplate) {
+    public OPAVoter(String opaUrl, RestTemplateBean restTemplateBean) {
         this.opaUrl = opaUrl;
-        this.restTemplate = restTemplate;
+        this.restTemplateBean = restTemplateBean;
     }
 
     @Override
@@ -56,7 +56,8 @@ public class OPAVoter implements AccessDecisionVoter<Object> {
         input.put("headers", headers);
 
         HttpEntity<?> request = new HttpEntity<>(new OPADataRequest(input));
-        OPADataResponse response = restTemplate.postForObject(this.opaUrl, request, OPADataResponse.class);
+        OPADataResponse response = restTemplateBean.getRestTemplate()
+        		.postForObject(this.opaUrl, request, OPADataResponse.class);
 
         if (!response.getResult()) {
             return ACCESS_DENIED;
