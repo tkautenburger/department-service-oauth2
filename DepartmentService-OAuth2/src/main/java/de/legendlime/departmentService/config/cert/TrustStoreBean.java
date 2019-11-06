@@ -1,4 +1,4 @@
-package de.legendlime.departmentService.config;
+package de.legendlime.departmentService.config.cert;
 
 import java.io.IOException;
 import java.security.KeyStore;

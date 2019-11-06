@@ -1,4 +1,4 @@
-package de.legendlime.departmentService.config;
+package de.legendlime.departmentService.config.tomcat;
 
 import org.apache.catalina.connector.Connector;
 import org.springframework.beans.factory.annotation.Value;

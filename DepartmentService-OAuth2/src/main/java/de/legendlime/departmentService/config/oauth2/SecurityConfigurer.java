@@ -3,7 +3,7 @@ package de.legendlime.departmentService.config.oauth2;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import de.legendlime.departmentService.config.opa.OPAVoter;
-import de.legendlime.departmentService.config.RestTemplateBean;
+import de.legendlime.departmentService.config.client.RestTemplateBean;
 import de.legendlime.departmentService.config.opa.OPAProperties;
 
 import java.util.Arrays;

@@ -1,4 +1,4 @@
-package de.legendlime.departmentService.config;
+package de.legendlime.departmentService.config.vault;
 
 import java.util.List;
 

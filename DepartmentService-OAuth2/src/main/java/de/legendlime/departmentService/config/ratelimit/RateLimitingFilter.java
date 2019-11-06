@@ -1,4 +1,4 @@
-package de.legendlime.departmentService.config;
+package de.legendlime.departmentService.config.ratelimit;
 
 import java.io.IOException;
 

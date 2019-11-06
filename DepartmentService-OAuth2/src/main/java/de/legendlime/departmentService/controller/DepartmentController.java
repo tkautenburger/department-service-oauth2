@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-import de.legendlime.departmentService.config.Secrets;
+import de.legendlime.departmentService.config.test.Secrets;
 import de.legendlime.departmentService.domain.Department;
 import de.legendlime.departmentService.domain.DepartmentDTO;
 import de.legendlime.departmentService.repository.DepartmentRepository;

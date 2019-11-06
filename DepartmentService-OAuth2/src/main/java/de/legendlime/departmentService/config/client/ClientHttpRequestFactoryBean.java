@@ -1,4 +1,4 @@
-package de.legendlime.departmentService.config;
+package de.legendlime.departmentService.config.client;
 
 import java.security.KeyManagementException;
 import java.security.KeyStore;
@@ -15,6 +15,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Component;
+
+import de.legendlime.departmentService.config.cert.KeyStoreBean;
+import de.legendlime.departmentService.config.cert.TrustStoreBean;
 
 /**
  * Bean containing the HTTP request factory for REST clients with the

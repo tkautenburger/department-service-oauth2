@@ -1,4 +1,4 @@
-package de.legendlime.departmentService.config;
+package de.legendlime.departmentService.config.test;
 
 /**
  * This is only test code that is not relevant

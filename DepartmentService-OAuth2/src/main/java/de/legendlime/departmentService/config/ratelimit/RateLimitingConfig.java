@@ -1,4 +1,4 @@
-package de.legendlime.departmentService.config;
+package de.legendlime.departmentService.config.ratelimit;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
