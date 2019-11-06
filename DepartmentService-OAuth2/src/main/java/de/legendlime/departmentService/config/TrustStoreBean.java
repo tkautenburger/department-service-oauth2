@@ -41,6 +41,7 @@ public class TrustStoreBean {
 
 		trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
 		trustStore.load(null, null);
+		certBundle = myCertificateBundle.getCertificateBundle();
 		trustStore.setCertificateEntry("ca", certBundle.getX509IssuerCertificate());
 		trustStore.setCertificateEntry("cert", certBundle.getX509Certificate());
 	}

@@ -108,6 +108,14 @@ public class CertificateClientServerRenewalScheduler {
 				logger.info("Scheduled next certificate renewal date: {}", new Date(VaultCertificateUtil.getExpires()));
 				executeCertificateRenewalTask(VaultCertificateUtil.getExpires());
 			}
+			
+			sslStoreProviderBean.renew(keyStoreBean, trustStoreBean);
+			try {
+				logger.debug("Updated SSL certificate: {}", sslStoreProviderBean.getKeyStore().getCertificate("vault").toString());
+			} catch (Exception e) {
+				logger.error("Exception: ", e);
+			}
+
 		} catch (KeyStoreException | NoSuchAlgorithmException | CertificateException | IOException
 				| InterruptedException | KeyManagementException | UnrecoverableKeyException e) {
 			logger.error("Renewing SSL store beans", e);

@@ -36,4 +36,9 @@ public class SslStoreProviderBean implements SslStoreProvider {
 	public KeyStore getTrustStore() throws Exception {
 		return trustStore;
 	}	
+	
+	public void renew(KeyStoreBean keyStoreBean, TrustStoreBean trustStoreBean) {
+		this.keyStore = keyStoreBean.getKeyStore();
+		this.trustStore = trustStoreBean.getTrustStore();
+	}
 }
