@@ -82,7 +82,7 @@ public class CertificateClientServerRenewalScheduler {
 		}
 		
 		if (VaultCertificateUtil.getExpires() > 0L) {
-			logger.info("Scheduled next certificate renewal date: {0}", new Date(VaultCertificateUtil.getExpires()));
+			logger.info("Scheduled next certificate renewal date: {}", new Date(VaultCertificateUtil.getExpires()));
 			executeCertificateRenewalTask(VaultCertificateUtil.getExpires());
 		}
 		
@@ -105,7 +105,7 @@ public class CertificateClientServerRenewalScheduler {
 				logger.info("Renewed SSL context for RestTemplate");
 			}
 			if (VaultCertificateUtil.getExpires() > 0L) {
-				logger.info("Scheduled next certificate renewal date: {0}", new Date(VaultCertificateUtil.getExpires()));
+				logger.info("Scheduled next certificate renewal date: {}", new Date(VaultCertificateUtil.getExpires()));
 				executeCertificateRenewalTask(VaultCertificateUtil.getExpires());
 			}
 		} catch (KeyStoreException | NoSuchAlgorithmException | CertificateException | IOException
