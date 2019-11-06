@@ -10,6 +10,8 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.ssl.SSLContextBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Component;
@@ -26,6 +28,8 @@ import org.springframework.stereotype.Component;
 @Component
 @ConditionalOnProperty(prefix = "server.ssl", name = "enabled", havingValue = "true")
 public class ClientHttpRequestFactoryBean {
+	
+	private final static Logger logger = LoggerFactory.getLogger(ClientHttpRequestFactoryBean.class);
 	
 	private KeyStore keyStore, trustStore;
 	private HttpComponentsClientHttpRequestFactory factory;
@@ -47,7 +51,6 @@ public class ClientHttpRequestFactoryBean {
 			throws KeyManagementException, UnrecoverableKeyException, NoSuchAlgorithmException, KeyStoreException {
 		this.keyStore = keyStoreBean.getKeyStore();
 		this.trustStore = trustStoreBean.getTrustStore();
-		// System.out.println(this.trustStore.getCertificate("ca"));
 		
 		SSLConnectionSocketFactory socketFactory = new SSLConnectionSocketFactory(new SSLContextBuilder()
 				.loadTrustMaterial(trustStore, null)
@@ -56,7 +59,7 @@ public class ClientHttpRequestFactoryBean {
 
 		HttpClientBuilder clientBuilder = HttpClientBuilder.create();
 		HttpClient httpClient = clientBuilder.setSSLSocketFactory(socketFactory).build();
-
 		this.factory = new HttpComponentsClientHttpRequestFactory(httpClient);
+		logger.debug("Renewed HTTP request factory with certificate: {}", this.keyStore.getCertificate("vault") );
 	}
 }

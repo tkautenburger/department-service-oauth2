@@ -130,6 +130,6 @@ logging:
         boot:
           autoconfigure:
             logging: INFO
-        security: DEBUG
-      legendlime: DEBUG
+        security: INFO
+      legendlime: INFO
       root: INFO 
