@@ -21,7 +21,7 @@ spring:
       # Vault AppRole authentication scheme
       authentication: approle
       app-role:
-        # secret-id: 07d487ef-bdca-582a-3dba-80f71c2f0f50
+        role-id: 36faa4bb-3d81-95e4-b191-27fff3ae844e
         # getting secret ID from OS environment
         secret-id: ${VAULT_APPROLE_SECRET_ID}
  
