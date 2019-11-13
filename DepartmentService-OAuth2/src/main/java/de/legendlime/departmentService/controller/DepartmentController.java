@@ -52,7 +52,7 @@ public class DepartmentController {
 		return repo.findAll();
 	}
 
-	@GetMapping(value = "/department/{id}", 
+	@GetMapping(value = "/departments/{id}", 
 			    produces = MediaType.APPLICATION_JSON_VALUE)
 	public Department getSingle(@PathVariable(name = "id", required = true) Long id) {
 
@@ -78,7 +78,7 @@ public class DepartmentController {
 		return repo.save(persistentDept);
 	}
 
-	@PutMapping(value = "/department/{id}", 
+	@PutMapping(value = "/departments/{id}", 
 			    consumes = MediaType.APPLICATION_JSON_VALUE, 
 			    produces = MediaType.APPLICATION_JSON_VALUE)
 	public Department update(@Valid @RequestBody DepartmentDTO dept, 
@@ -94,7 +94,7 @@ public class DepartmentController {
 		return repo.save(d);
 	}
 	
-	@DeleteMapping(value = "/department/{id}")
+	@DeleteMapping(value = "/departments/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public ResponseEntity<?> delete(@PathVariable(name = "id", required = true) Long id) {
 
