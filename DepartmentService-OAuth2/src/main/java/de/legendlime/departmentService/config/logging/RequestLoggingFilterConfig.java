@@ -11,11 +11,13 @@ public class RequestLoggingFilterConfig {
     public CommonsRequestLoggingFilter logFilter() {
         CommonsRequestLoggingFilter filter
           = new CommonsRequestLoggingFilter();
+        filter.setIncludeClientInfo(true);
         filter.setIncludeQueryString(true);
         filter.setIncludePayload(true);
         filter.setMaxPayloadLength(2000);
         filter.setIncludeHeaders(true);
-        filter.setAfterMessagePrefix("REQUEST DATA : ");
+        filter.setBeforeMessagePrefix("BEFORE REQUEST PROCESSING : ");
+        filter.setAfterMessagePrefix("AFTER REQUEST PROCESSING : ");
         return filter;
     }
 }
