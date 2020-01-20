@@ -39,13 +39,19 @@ public class ResponseLoggingFilter implements Filter {
 		
 		String traceId = httpServletRequest.getHeader(TRACE_ID);
 		if (traceId == null || traceId.isEmpty()) {
-			traceId = tracer.activeSpan().context().toTraceId();
+			if (tracer.activeSpan() != null)
+				traceId = tracer.activeSpan().context().toTraceId();
+			else
+				traceId = tracer.buildSpan("department-service").start().context().toTraceId();
 		}
 		logger.info("Incoming Trace-ID: {}", traceId);
 
 		String spanId = httpServletRequest.getHeader(SPAN_ID);
 		if (spanId == null || spanId.isEmpty()) {
-			spanId = tracer.activeSpan().context().toSpanId();
+			if (tracer.activeSpan() != null)
+				spanId = tracer.activeSpan().context().toSpanId();
+			else
+				spanId = tracer.buildSpan("department-service").start().context().toSpanId();
 		}
 		logger.info("Incoming Span-ID: {}", spanId);
 
