@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
@@ -30,18 +31,22 @@ public class ResponseLoggingFilter implements Filter {
 	@Autowired
 	Tracer tracer;
 
+	@Autowired
+	private ApplicationContext applicationContext;
+	
 	@Override
 	public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
 			throws IOException, ServletException {
 
 		HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
-
+		boolean buildSpan = false;
 		String traceId = httpServletRequest.getHeader(TRACE_ID);
 		if (traceId == null || traceId.isEmpty()) {
 			if (tracer.activeSpan() != null)
 				traceId = tracer.activeSpan().context().toTraceId();
 			else {
-				traceId = tracer.buildSpan("department-service").start().context().toTraceId();
+				traceId = tracer.buildSpan(applicationContext.getId()).start().context().toTraceId();
+				buildSpan = true;
 			}
 		}
 		logger.info("Incoming Trace-ID: {}", traceId);
@@ -51,8 +56,10 @@ public class ResponseLoggingFilter implements Filter {
 		if (httpServletResponse.getHeader(TRACE_ID) == null)
 			httpServletResponse.addHeader(TRACE_ID, traceId);
 
-		if (tracer.activeSpan() != null)
+		if (buildSpan && tracer.activeSpan() != null)
 			tracer.activeSpan().finish();
+		
+		// insert response logging here
 
 		filterChain.doFilter(httpServletRequest, servletResponse);
 	}
