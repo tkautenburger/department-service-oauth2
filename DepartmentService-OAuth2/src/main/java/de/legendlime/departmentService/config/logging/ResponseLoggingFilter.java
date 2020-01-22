@@ -1,6 +1,8 @@
 package de.legendlime.departmentService.config.logging;
 
 import java.io.IOException;
+import java.util.Collection;
+import java.util.Enumeration;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -26,6 +28,7 @@ import io.opentracing.Tracer;
 public class ResponseLoggingFilter implements Filter {
 
 	public static final String TRACE_ID = "x-trace-id";
+	public static final String RESPONSE_PREFIX = "RESPONSE : ";
 	private static final Logger logger = LoggerFactory.getLogger(ResponseLoggingFilter.class);
 
 	@Autowired
@@ -59,7 +62,7 @@ public class ResponseLoggingFilter implements Filter {
 		if (buildSpan && tracer.activeSpan() != null)
 			tracer.activeSpan().finish();
 		
-		// insert response logging here
+		logger.debug(createResponseLogMessage(httpServletResponse));
 
 		filterChain.doFilter(httpServletRequest, servletResponse);
 	}
@@ -70,5 +73,25 @@ public class ResponseLoggingFilter implements Filter {
 
 	@Override
 	public void destroy() {
+	}
+	
+	protected String createResponseLogMessage(HttpServletResponse response) {
+		StringBuilder msg = new StringBuilder();
+		
+		msg.append(RESPONSE_PREFIX);
+		msg.append("HTTP status=");
+		msg.append(response.getStatus());
+		msg.append(", ");
+		msg.append("headers=[");
+		Collection<String> names = response.getHeaderNames();
+		names.forEach( name -> {
+			msg.append(name);
+			msg.append(":");
+			msg.append(response.getHeader(name));
+			msg.append(", ");
+		});
+		msg.append("]");
+		
+		return msg.toString();
 	}
 }
