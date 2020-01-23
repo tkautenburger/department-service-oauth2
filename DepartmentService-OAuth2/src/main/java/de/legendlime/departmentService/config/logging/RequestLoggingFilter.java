@@ -1,7 +1,6 @@
 package de.legendlime.departmentService.config.logging;
 
 import java.io.IOException;
-import java.util.Collection;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -10,7 +9,6 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,12 +21,11 @@ import org.springframework.stereotype.Component;
 import io.opentracing.Tracer;
 
 @Component
-@Order(Ordered.LOWEST_PRECEDENCE)
-public class ResponseLoggingFilter implements Filter {
+@Order(Ordered.HIGHEST_PRECEDENCE)
+public class RequestLoggingFilter implements Filter {
 
 	public static final String TRACE_ID = "x-trace-id";
-	public static final String RESPONSE_PREFIX = "RESPONSE : ";
-	private static final Logger logger = LoggerFactory.getLogger(ResponseLoggingFilter.class);
+	private static final Logger logger = LoggerFactory.getLogger(RequestLoggingFilter.class);
 
 	@Autowired
 	Tracer tracer;
@@ -51,17 +48,11 @@ public class ResponseLoggingFilter implements Filter {
 				buildSpan = true;
 			}
 		}
-		// Add trace ID to the response
-		HttpServletResponse httpServletResponse = (HttpServletResponse) servletResponse;
-		if (httpServletResponse.getHeader(TRACE_ID) == null)
-			httpServletResponse.addHeader(TRACE_ID, traceId);
+		logger.info("Incoming Trace-ID: {}", traceId);
 
 		if (buildSpan && tracer.activeSpan() != null)
 			tracer.activeSpan().finish();
 		
-		// TODO: get logger at a later stage into the controller
-		logger.debug(createResponseLogMessage(httpServletResponse));
-
 		filterChain.doFilter(httpServletRequest, servletResponse);
 	}
 
@@ -73,23 +64,4 @@ public class ResponseLoggingFilter implements Filter {
 	public void destroy() {
 	}
 	
-	protected String createResponseLogMessage(HttpServletResponse response) {
-		StringBuilder msg = new StringBuilder();
-		
-		msg.append(RESPONSE_PREFIX);
-		msg.append("HTTP status=");
-		msg.append(response.getStatus());
-		msg.append(", ");
-		msg.append("headers=[");
-		Collection<String> names = response.getHeaderNames();
-		names.forEach( name -> {
-			msg.append(name);
-			msg.append(":");
-			msg.append(response.getHeader(name));
-			msg.append(", ");
-		});
-		msg.append("]");
-		
-		return msg.toString();
-	}
 }
