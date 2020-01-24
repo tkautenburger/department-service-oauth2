@@ -18,11 +18,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
-import org.springframework.stereotype.Component;
 
 import io.opentracing.Tracer;
 
-@Component
+
 @Order(Ordered.LOWEST_PRECEDENCE)
 public class ResponseLoggingFilter implements Filter {
 
