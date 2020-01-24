@@ -59,10 +59,10 @@ public class ResponseLoggingFilter implements Filter {
 		if (buildSpan && tracer.activeSpan() != null)
 			tracer.activeSpan().finish();
 		
+		filterChain.doFilter(httpServletRequest, httpServletResponse);
+
 		// TODO: get logger at a later stage into the controller
 		logger.debug(createResponseLogMessage(httpServletResponse));
-
-		filterChain.doFilter(httpServletRequest, servletResponse);
 	}
 
 	@Override
