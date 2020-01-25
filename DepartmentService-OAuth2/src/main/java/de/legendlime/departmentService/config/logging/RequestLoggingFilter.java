@@ -56,13 +56,12 @@ public class RequestLoggingFilter implements Filter {
 			}
 		}
 		logger.info("Incoming Trace-ID: {}", traceId);
+		logger.debug(createRequestLogMessage(httpServletRequest));
 
 		if (buildSpan && tracer.activeSpan() != null)
 			tracer.activeSpan().finish();
 		
 		filterChain.doFilter(httpServletRequest, servletResponse);
-		
-		logger.debug(createRequestLogMessage(httpServletRequest));
 	}
 
 	@Override
