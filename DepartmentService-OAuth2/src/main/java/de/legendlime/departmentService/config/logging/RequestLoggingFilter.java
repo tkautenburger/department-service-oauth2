@@ -12,7 +12,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
@@ -25,12 +24,14 @@ public class RequestLoggingFilter implements Filter {
 
 	public static final String TRACE_ID = "x-trace-id";
 	private static final Logger logger = LoggerFactory.getLogger(RequestLoggingFilter.class);
-
-	@Autowired
-	Tracer tracer;
-
-	@Autowired
+	
+	private Tracer tracer;
 	private ApplicationContext applicationContext;
+	
+	public RequestLoggingFilter(Tracer tracer, ApplicationContext applicationContext) {
+		this.tracer = tracer;
+		this.applicationContext = applicationContext;
+	}
 	
 	@Override
 	public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
