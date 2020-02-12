@@ -27,16 +27,12 @@ import de.legendlime.departmentService.config.tomcat.SslStoreProviderBean;
 @EnableConfigurationProperties(VaultPkiProperties.class)
 public class VaultPkiConfiguration {
 
-	// private final static Logger logger = LoggerFactory.getLogger(VaultPkiConfiguration.class);
-
 	@Bean
 	@ConditionalOnProperty(prefix = "server.ssl", name = "enabled", havingValue = "true")
 	public static SslCertificateEmbeddedServletContainerCustomizer sslCertificateRequestingPostProcessor(
 			ServerProperties serverProperties, SslStoreProviderBean sslStoreProviderBean) throws Exception {
 		
 		return createCustomizer(serverProperties, sslStoreProviderBean);
-
-		// return new SslCertificateEmbeddedServletContainerCustomizer(keyStoreBean.getKeyStore(), trustStoreBean.getTrustStore());
 	}
 
 
@@ -45,13 +41,11 @@ public class VaultPkiConfiguration {
 
 		Ssl ssl = serverProperties.getSsl();
 		
-		
 		if (ssl != null) {
 			ssl.setKeyAlias("vault");
 			ssl.setKeyPassword("");
 			ssl.setKeyStorePassword("");
 		}
-
 		return new SslCertificateEmbeddedServletContainerCustomizer(sslStoreProviderBean);
 	}
 
@@ -59,7 +53,6 @@ public class VaultPkiConfiguration {
 	private static class SslCertificateEmbeddedServletContainerCustomizer
 			implements WebServerFactoryCustomizer<ConfigurableServletWebServerFactory> {
 
-		// private final CertificateBundle certificateBundle;
 		private final SslStoreProvider sslStoreProvider;
 
 		SslCertificateEmbeddedServletContainerCustomizer(SslStoreProviderBean sslStoreProviderBean) {
@@ -68,9 +61,7 @@ public class VaultPkiConfiguration {
 
 		@Override
 		public void customize(ConfigurableServletWebServerFactory container) {
-			// TomcatServletWebServerFactory factory = (TomcatServletWebServerFactory) container;
 			container.setSslStoreProvider(sslStoreProvider);
-			
 		}
 	}
 }
