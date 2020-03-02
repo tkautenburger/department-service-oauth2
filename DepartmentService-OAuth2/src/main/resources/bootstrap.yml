@@ -12,6 +12,7 @@ spring:
       config:
         enabled: true
         format: YAML
+        acl-token: ${CONSUL_DEPARTMENT_ACL_TOKEN}
 
         
     vault:
