@@ -12,6 +12,7 @@ spring:
       config:
         enabled: true
         format: YAML
+        # getting consul ACL token from OS environment
         acl-token: ${CONSUL_DEPARTMENT_ACL_TOKEN}
 
         
