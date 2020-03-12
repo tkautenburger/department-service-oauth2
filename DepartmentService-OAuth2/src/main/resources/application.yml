@@ -46,6 +46,29 @@ spring:
 
 
 #--------------------------------------
+# Cloud Streams Kafka Configuration
+#--------------------------------------
+ 
+    stream:
+      bindings:
+        output:
+          destination: auditing
+          binder: kafka-out
+          content-type: application/json
+          group: auditGroup
+      binders:   
+        kafka-out:
+          type: kafka
+          environment:
+            spring:
+              cloud:
+                stream:
+                  kafka:
+                    binder:
+                      zkNodes: kafka-zookeeper-0.kafka-zookeeper-headless.messaging.svc.cluster.local:2182
+                      brokers: kafka-0.kafka-headless.messaging.svc.cluster.local:9092
+
+#--------------------------------------
 # Vault CA Configuration
 #--------------------------------------
 

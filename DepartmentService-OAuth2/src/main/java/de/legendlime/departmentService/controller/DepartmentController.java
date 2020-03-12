@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import de.legendlime.departmentService.domain.Department;
 import de.legendlime.departmentService.domain.DepartmentDTO;
+import de.legendlime.departmentService.messaging.AuditSourceBean;
 import de.legendlime.departmentService.repository.DepartmentRepository;
 
 @RestController
@@ -40,11 +41,15 @@ public class DepartmentController {
 	
 	@Autowired
 	DataSourceProperties dsProperties;
+	
+	@Autowired
+	AuditSourceBean audit;
 
 	@GetMapping(value = "/departments", 
 			    produces = MediaType.APPLICATION_JSON_VALUE)
 	public List<Department> getAll() {
 
+		audit.publishAuditMessage("GET all department objects");
 		return repo.findAll();
 	}
 
@@ -52,8 +57,11 @@ public class DepartmentController {
 			    produces = MediaType.APPLICATION_JSON_VALUE)
 	public Department getSingle(@PathVariable(name = "id", required = true) Long id) {
 
-		return repo.findById(id).orElseThrow(() -> 
+		Department dept = repo.findById(id).orElseThrow(() -> 
 		  new ResourceNotFoundException(NOT_FOUND + id));
+		
+		audit.publishAuditMessage("GET department object: " + dept.getName());
+		return dept;
 	}
 
 	@PostMapping(value = "/departments", 
@@ -70,6 +78,8 @@ public class DepartmentController {
 		persistentDept.setDeptId(dept.getDeptId());
 		persistentDept.setName(dept.getName());
 		persistentDept.setDescription(dept.getDescription());
+		
+		audit.publishAuditMessage("CREATE department object: " + persistentDept.getName());
 
 		return repo.save(persistentDept);
 	}
@@ -87,6 +97,8 @@ public class DepartmentController {
 		d.setDeptId(dept.getDeptId());
 		d.setName(dept.getName());
 		d.setDescription(dept.getDescription());
+
+		audit.publishAuditMessage("UPDATE department object: " + d.getName());
 		return repo.save(d);
 	}
 	
@@ -97,6 +109,9 @@ public class DepartmentController {
 		Optional<Department> deptOpt = repo.findById(id);
 		if (!deptOpt.isPresent())
 			throw new ResourceNotFoundException(NOT_FOUND + id);
+
+		audit.publishAuditMessage("DELETE department object: " + deptOpt.get().getName());
+
 		repo.delete(deptOpt.get());
 		return ResponseEntity.ok().build();
 	}
