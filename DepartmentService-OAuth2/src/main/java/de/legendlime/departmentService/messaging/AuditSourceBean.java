@@ -15,8 +15,8 @@ public class AuditSourceBean {
 		this.source = source;
 	}
 	
-	public void publishAuditMessage(String message) {
-		source.output().send(MessageBuilder.withPayload(message).build());
+	public void publishAuditMessage(AuditRecord record) {
+		source.output().send(MessageBuilder.withPayload(record).build());
 	}
 
 }

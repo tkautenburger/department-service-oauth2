@@ -1,0 +1,166 @@
+package de.legendlime.departmentService.messaging;
+
+public class AuditRecord {
+	
+	String method;
+	String uri;
+	String objectType;
+	long objectId;
+	String client;
+	String sessionId;
+	String user;
+	String traceId;
+	
+	public AuditRecord() {
+		super();
+	}
+
+	public AuditRecord(String method, String uri, String objectType, long objectId, String client, String sessionId,
+			String user, String traceId) {
+		super();
+		this.method = method;
+		this.uri = uri;
+		this.objectType = objectType;
+		this.objectId = objectId;
+		this.client = client;
+		this.sessionId = sessionId;
+		this.user = user;
+		this.traceId = traceId;
+	}
+
+	public String getMethod() {
+		return method;
+	}
+
+	public void setMethod(String method) {
+		this.method = method;
+	}
+
+	public String getUri() {
+		return uri;
+	}
+
+	public void setUri(String uri) {
+		this.uri = uri;
+	}
+
+	public String getObjectType() {
+		return objectType;
+	}
+
+	public void setObjectType(String objectType) {
+		this.objectType = objectType;
+	}
+
+	public long getObjectId() {
+		return objectId;
+	}
+
+	public void setObjectId(long objectId) {
+		this.objectId = objectId;
+	}
+
+	public String getClient() {
+		return client;
+	}
+
+	public void setClient(String client) {
+		this.client = client;
+	}
+
+	public String getSessionId() {
+		return sessionId;
+	}
+
+	public void setSessionId(String sessionId) {
+		this.sessionId = sessionId;
+	}
+
+	public String getUser() {
+		return user;
+	}
+
+	public void setUser(String user) {
+		this.user = user;
+	}
+
+	public String getTraceId() {
+		return traceId;
+	}
+
+	public void setTraceId(String traceId) {
+		this.traceId = traceId;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((client == null) ? 0 : client.hashCode());
+		result = prime * result + ((method == null) ? 0 : method.hashCode());
+		result = prime * result + (int) (objectId ^ (objectId >>> 32));
+		result = prime * result + ((objectType == null) ? 0 : objectType.hashCode());
+		result = prime * result + ((sessionId == null) ? 0 : sessionId.hashCode());
+		result = prime * result + ((traceId == null) ? 0 : traceId.hashCode());
+		result = prime * result + ((uri == null) ? 0 : uri.hashCode());
+		result = prime * result + ((user == null) ? 0 : user.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		AuditRecord other = (AuditRecord) obj;
+		if (client == null) {
+			if (other.client != null)
+				return false;
+		} else if (!client.equals(other.client))
+			return false;
+		if (method == null) {
+			if (other.method != null)
+				return false;
+		} else if (!method.equals(other.method))
+			return false;
+		if (objectId != other.objectId)
+			return false;
+		if (objectType == null) {
+			if (other.objectType != null)
+				return false;
+		} else if (!objectType.equals(other.objectType))
+			return false;
+		if (sessionId == null) {
+			if (other.sessionId != null)
+				return false;
+		} else if (!sessionId.equals(other.sessionId))
+			return false;
+		if (traceId == null) {
+			if (other.traceId != null)
+				return false;
+		} else if (!traceId.equals(other.traceId))
+			return false;
+		if (uri == null) {
+			if (other.uri != null)
+				return false;
+		} else if (!uri.equals(other.uri))
+			return false;
+		if (user == null) {
+			if (other.user != null)
+				return false;
+		} else if (!user.equals(other.user))
+			return false;
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "AuditRecord [method=" + method + ", uri=" + uri + ", objectType=" + objectType + ", objectId="
+				+ objectId + ", client=" + client + ", sessionId=" + sessionId + ", user=" + user + ", traceId="
+				+ traceId + "]";
+	}
+	
+}

@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import de.legendlime.departmentService.domain.Department;
 import de.legendlime.departmentService.domain.DepartmentDTO;
+import de.legendlime.departmentService.messaging.AuditRecord;
 import de.legendlime.departmentService.messaging.AuditSourceBean;
 import de.legendlime.departmentService.repository.DepartmentRepository;
 
@@ -49,7 +50,12 @@ public class DepartmentController {
 			    produces = MediaType.APPLICATION_JSON_VALUE)
 	public List<Department> getAll() {
 
-		audit.publishAuditMessage("GET all department objects");
+		AuditRecord record = new AuditRecord();
+		record.setMethod("GET");
+		record.setObjectType(Department.class.getName());
+		record.setObjectId(0L);
+		audit.publishAuditMessage(record);
+
 		return repo.findAll();
 	}
 
@@ -60,7 +66,12 @@ public class DepartmentController {
 		Department dept = repo.findById(id).orElseThrow(() -> 
 		  new ResourceNotFoundException(NOT_FOUND + id));
 		
-		audit.publishAuditMessage("GET department object: " + dept.getName());
+		AuditRecord record = new AuditRecord();
+		record.setMethod("GET");
+		record.setObjectType(Department.class.getName());
+		record.setObjectId(dept.getDeptId());
+		audit.publishAuditMessage(record);
+
 		return dept;
 	}
 
@@ -79,7 +90,11 @@ public class DepartmentController {
 		persistentDept.setName(dept.getName());
 		persistentDept.setDescription(dept.getDescription());
 		
-		audit.publishAuditMessage("CREATE department object: " + persistentDept.getName());
+		AuditRecord record = new AuditRecord();
+		record.setMethod("CREATE");
+		record.setObjectType(Department.class.getName());
+		record.setObjectId(persistentDept.getDeptId());
+		audit.publishAuditMessage(record);
 
 		return repo.save(persistentDept);
 	}
@@ -98,7 +113,12 @@ public class DepartmentController {
 		d.setName(dept.getName());
 		d.setDescription(dept.getDescription());
 
-		audit.publishAuditMessage("UPDATE department object: " + d.getName());
+		AuditRecord record = new AuditRecord();
+		record.setMethod("UPDATE");
+		record.setObjectType(Department.class.getName());
+		record.setObjectId(d.getDeptId());
+		audit.publishAuditMessage(record);
+
 		return repo.save(d);
 	}
 	
@@ -110,9 +130,14 @@ public class DepartmentController {
 		if (!deptOpt.isPresent())
 			throw new ResourceNotFoundException(NOT_FOUND + id);
 
-		audit.publishAuditMessage("DELETE department object: " + deptOpt.get().getName());
-
 		repo.delete(deptOpt.get());
+
+		AuditRecord record = new AuditRecord();
+		record.setMethod("DELETE");
+		record.setObjectType(Department.class.getName());
+		record.setObjectId(deptOpt.get().getDeptId());
+		audit.publishAuditMessage(record);
+
 		return ResponseEntity.ok().build();
 	}
 }
