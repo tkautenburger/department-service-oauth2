@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
@@ -51,7 +52,7 @@ public class DepartmentController {
 
 	@GetMapping(value = "/departments", 
 			    produces = MediaType.APPLICATION_JSON_VALUE)
-	public List<Department> getAll(HttpServletRequest request) {
+	public List<Department> getAll(HttpServletRequest request, HttpServletResponse response) {
 
 		AuditRecord record = new AuditRecord();
 		record.setMethod("GET");
@@ -66,7 +67,7 @@ public class DepartmentController {
 		if (session != null) {
 			record.setSessionId(session.getId());
 		}		
-		record.setTraceId(request.getHeader(ResponseLoggingFilter.TRACE_ID));
+		record.setTraceId(response.getHeader(ResponseLoggingFilter.TRACE_ID));
 		record.setObjectType(Department.class.getName());
 		record.setObjectId(0L);
 		audit.publishAuditMessage(record);
@@ -77,7 +78,7 @@ public class DepartmentController {
 	@GetMapping(value = "/departments/{id}", 
 			    produces = MediaType.APPLICATION_JSON_VALUE)
 	public Department getSingle(@PathVariable(name = "id", required = true) Long id, 
-			HttpServletRequest request) {
+			HttpServletRequest request, HttpServletResponse response) {
 
 		Department dept = repo.findById(id).orElseThrow(() -> 
 		  new ResourceNotFoundException(NOT_FOUND + id));
@@ -95,7 +96,7 @@ public class DepartmentController {
 		if (session != null) {
 			record.setSessionId(session.getId());
 		}		
-		record.setTraceId(request.getHeader(ResponseLoggingFilter.TRACE_ID));
+		record.setTraceId(response.getHeader(ResponseLoggingFilter.TRACE_ID));
 		record.setObjectType(Department.class.getName());
 		record.setObjectId(dept.getDeptId());
 		audit.publishAuditMessage(record);
@@ -107,7 +108,7 @@ public class DepartmentController {
 			     consumes = MediaType.APPLICATION_JSON_VALUE, 
 			     produces = MediaType.APPLICATION_JSON_VALUE)
 	public Department create(@Valid @RequestBody DepartmentDTO dept, 
-			HttpServletRequest request) {
+			HttpServletRequest request, HttpServletResponse response) {
 
 		if (dept == null)
 			throw new IllegalArgumentException(NOT_NULL);
@@ -132,7 +133,7 @@ public class DepartmentController {
 		if (session != null) {
 			record.setSessionId(session.getId());
 		}		
-		record.setTraceId(request.getHeader(ResponseLoggingFilter.TRACE_ID));
+		record.setTraceId(response.getHeader(ResponseLoggingFilter.TRACE_ID));
 		record.setObjectType(Department.class.getName());
 		record.setObjectId(persistentDept.getDeptId());
 		audit.publishAuditMessage(record);
@@ -145,7 +146,7 @@ public class DepartmentController {
 			    produces = MediaType.APPLICATION_JSON_VALUE)
 	public Department update(@Valid @RequestBody DepartmentDTO dept, 
 			                 @PathVariable(name = "id", required = true) Long id, 
-			                 HttpServletRequest request) {
+			                 HttpServletRequest request, HttpServletResponse response) {
 		
 		Optional<Department> deptOpt = repo.findById(id);
 		if (!deptOpt.isPresent())
@@ -168,7 +169,7 @@ public class DepartmentController {
 		if (session != null) {
 			record.setSessionId(session.getId());
 		}		
-		record.setTraceId(request.getHeader(ResponseLoggingFilter.TRACE_ID));
+		record.setTraceId(response.getHeader(ResponseLoggingFilter.TRACE_ID));
 		record.setObjectType(Department.class.getName());
 		record.setObjectId(d.getDeptId());
 		audit.publishAuditMessage(record);
@@ -179,7 +180,7 @@ public class DepartmentController {
 	@DeleteMapping(value = "/departments/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public ResponseEntity<?> delete(@PathVariable(name = "id", required = true) Long id, 
-			HttpServletRequest request) {
+			HttpServletRequest request, HttpServletResponse response) {
 
 		Optional<Department> deptOpt = repo.findById(id);
 		if (!deptOpt.isPresent())
@@ -201,7 +202,7 @@ public class DepartmentController {
 		if (session != null) {
 			record.setSessionId(session.getId());
 		}		
-		record.setTraceId(request.getHeader(ResponseLoggingFilter.TRACE_ID));
+		record.setTraceId(response.getHeader(ResponseLoggingFilter.TRACE_ID));
 		record.setObjectType(Department.class.getName());
 		record.setObjectId(deptOpt.get().getDeptId());
 		
