@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import de.legendlime.departmentService.config.logging.ResponseLoggingFilter;
 import de.legendlime.departmentService.domain.Department;
 import de.legendlime.departmentService.domain.DepartmentDTO;
 import de.legendlime.departmentService.messaging.AuditRecord;
@@ -65,7 +66,7 @@ public class DepartmentController {
 		if (session != null) {
 			record.setSessionId(session.getId());
 		}		
-		record.setTraceId(null);
+		record.setTraceId(request.getHeader(ResponseLoggingFilter.TRACE_ID));
 		record.setObjectType(Department.class.getName());
 		record.setObjectId(0L);
 		audit.publishAuditMessage(record);
@@ -94,7 +95,7 @@ public class DepartmentController {
 		if (session != null) {
 			record.setSessionId(session.getId());
 		}		
-		record.setTraceId(null);
+		record.setTraceId(request.getHeader(ResponseLoggingFilter.TRACE_ID));
 		record.setObjectType(Department.class.getName());
 		record.setObjectId(dept.getDeptId());
 		audit.publishAuditMessage(record);
@@ -131,7 +132,7 @@ public class DepartmentController {
 		if (session != null) {
 			record.setSessionId(session.getId());
 		}		
-		record.setTraceId(null);
+		record.setTraceId(request.getHeader(ResponseLoggingFilter.TRACE_ID));
 		record.setObjectType(Department.class.getName());
 		record.setObjectId(persistentDept.getDeptId());
 		audit.publishAuditMessage(record);
@@ -167,7 +168,7 @@ public class DepartmentController {
 		if (session != null) {
 			record.setSessionId(session.getId());
 		}		
-		record.setTraceId(null);
+		record.setTraceId(request.getHeader(ResponseLoggingFilter.TRACE_ID));
 		record.setObjectType(Department.class.getName());
 		record.setObjectId(d.getDeptId());
 		audit.publishAuditMessage(record);
@@ -200,8 +201,7 @@ public class DepartmentController {
 		if (session != null) {
 			record.setSessionId(session.getId());
 		}		
-		record.setTraceId(null);
-
+		record.setTraceId(request.getHeader(ResponseLoggingFilter.TRACE_ID));
 		record.setObjectType(Department.class.getName());
 		record.setObjectId(deptOpt.get().getDeptId());
 		
