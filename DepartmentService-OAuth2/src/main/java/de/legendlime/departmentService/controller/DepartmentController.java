@@ -3,6 +3,8 @@ package de.legendlime.departmentService.controller;
 import java.util.List;
 import java.util.Optional;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,10 +50,22 @@ public class DepartmentController {
 
 	@GetMapping(value = "/departments", 
 			    produces = MediaType.APPLICATION_JSON_VALUE)
-	public List<Department> getAll() {
+	public List<Department> getAll(HttpServletRequest request) {
 
 		AuditRecord record = new AuditRecord();
 		record.setMethod("GET");
+		record.setUri(request.getRequestURI());
+		record.setClient(request.getRemoteAddr());
+		
+		String user = request.getRemoteUser();
+		if (user != null) {
+			record.setUser(user);
+		}
+		HttpSession session = request.getSession(false);
+		if (session != null) {
+			record.setSessionId(session.getId());
+		}		
+		record.setTraceId(null);
 		record.setObjectType(Department.class.getName());
 		record.setObjectId(0L);
 		audit.publishAuditMessage(record);
@@ -61,13 +75,26 @@ public class DepartmentController {
 
 	@GetMapping(value = "/departments/{id}", 
 			    produces = MediaType.APPLICATION_JSON_VALUE)
-	public Department getSingle(@PathVariable(name = "id", required = true) Long id) {
+	public Department getSingle(@PathVariable(name = "id", required = true) Long id, 
+			HttpServletRequest request) {
 
 		Department dept = repo.findById(id).orElseThrow(() -> 
 		  new ResourceNotFoundException(NOT_FOUND + id));
 		
 		AuditRecord record = new AuditRecord();
 		record.setMethod("GET");
+		record.setUri(request.getRequestURI());
+		record.setClient(request.getRemoteAddr());
+		
+		String user = request.getRemoteUser();
+		if (user != null) {
+			record.setUser(user);
+		}
+		HttpSession session = request.getSession(false);
+		if (session != null) {
+			record.setSessionId(session.getId());
+		}		
+		record.setTraceId(null);
 		record.setObjectType(Department.class.getName());
 		record.setObjectId(dept.getDeptId());
 		audit.publishAuditMessage(record);
@@ -78,7 +105,8 @@ public class DepartmentController {
 	@PostMapping(value = "/departments", 
 			     consumes = MediaType.APPLICATION_JSON_VALUE, 
 			     produces = MediaType.APPLICATION_JSON_VALUE)
-	public Department create(@Valid @RequestBody DepartmentDTO dept) {
+	public Department create(@Valid @RequestBody DepartmentDTO dept, 
+			HttpServletRequest request) {
 
 		if (dept == null)
 			throw new IllegalArgumentException(NOT_NULL);
@@ -92,6 +120,18 @@ public class DepartmentController {
 		
 		AuditRecord record = new AuditRecord();
 		record.setMethod("CREATE");
+		record.setUri(request.getRequestURI());
+		record.setClient(request.getRemoteAddr());
+		
+		String user = request.getRemoteUser();
+		if (user != null) {
+			record.setUser(user);
+		}
+		HttpSession session = request.getSession(false);
+		if (session != null) {
+			record.setSessionId(session.getId());
+		}		
+		record.setTraceId(null);
 		record.setObjectType(Department.class.getName());
 		record.setObjectId(persistentDept.getDeptId());
 		audit.publishAuditMessage(record);
@@ -103,7 +143,8 @@ public class DepartmentController {
 			    consumes = MediaType.APPLICATION_JSON_VALUE, 
 			    produces = MediaType.APPLICATION_JSON_VALUE)
 	public Department update(@Valid @RequestBody DepartmentDTO dept, 
-			                 @PathVariable(name = "id", required = true) Long id) {
+			                 @PathVariable(name = "id", required = true) Long id, 
+			                 HttpServletRequest request) {
 		
 		Optional<Department> deptOpt = repo.findById(id);
 		if (!deptOpt.isPresent())
@@ -115,6 +156,18 @@ public class DepartmentController {
 
 		AuditRecord record = new AuditRecord();
 		record.setMethod("UPDATE");
+		record.setUri(request.getRequestURI());
+		record.setClient(request.getRemoteAddr());
+		
+		String user = request.getRemoteUser();
+		if (user != null) {
+			record.setUser(user);
+		}
+		HttpSession session = request.getSession(false);
+		if (session != null) {
+			record.setSessionId(session.getId());
+		}		
+		record.setTraceId(null);
 		record.setObjectType(Department.class.getName());
 		record.setObjectId(d.getDeptId());
 		audit.publishAuditMessage(record);
@@ -124,7 +177,8 @@ public class DepartmentController {
 	
 	@DeleteMapping(value = "/departments/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public ResponseEntity<?> delete(@PathVariable(name = "id", required = true) Long id) {
+	public ResponseEntity<?> delete(@PathVariable(name = "id", required = true) Long id, 
+			HttpServletRequest request) {
 
 		Optional<Department> deptOpt = repo.findById(id);
 		if (!deptOpt.isPresent())
@@ -134,8 +188,23 @@ public class DepartmentController {
 
 		AuditRecord record = new AuditRecord();
 		record.setMethod("DELETE");
+		
+		record.setUri(request.getRequestURI());
+		record.setClient(request.getRemoteAddr());
+		
+		String user = request.getRemoteUser();
+		if (user != null) {
+			record.setUser(user);
+		}
+		HttpSession session = request.getSession(false);
+		if (session != null) {
+			record.setSessionId(session.getId());
+		}		
+		record.setTraceId(null);
+
 		record.setObjectType(Department.class.getName());
 		record.setObjectId(deptOpt.get().getDeptId());
+		
 		audit.publishAuditMessage(record);
 
 		return ResponseEntity.ok().build();
