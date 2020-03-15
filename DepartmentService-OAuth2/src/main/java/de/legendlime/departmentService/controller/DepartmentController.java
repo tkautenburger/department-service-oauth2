@@ -153,10 +153,10 @@ public class DepartmentController {
 			record.setSessionId(session.getId());
 		}		
 		record.setTraceId(response.getHeader(ResponseLoggingFilter.TRACE_ID));
-		record.setObjectType(obj.getClass().getName());
-		if (obj != null)
+		if (obj != null) {
+			record.setObjectType(obj.getClass().getName());
 			record.setObjectId(obj.getDeptId());
-		
+		}
 		return record;
 	}
 }
