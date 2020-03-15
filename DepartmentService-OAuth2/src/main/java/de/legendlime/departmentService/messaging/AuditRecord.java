@@ -1,7 +1,10 @@
 package de.legendlime.departmentService.messaging;
 
+import java.time.Instant;
+
 public class AuditRecord {
 	
+	String timestamp;
 	String method;
 	String uri;
 	String objectType;
@@ -122,6 +125,14 @@ public class AuditRecord {
 		this.podName = podName;
 	}
 
+	public String getTimestamp() {
+		return timestamp;
+	}
+
+	public void setTimestamp(String timestamp) {
+		this.timestamp = timestamp;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -206,9 +217,10 @@ public class AuditRecord {
 
 	@Override
 	public String toString() {
-		return "AuditRecord [method=" + method + ", uri=" + uri + ", objectType=" + objectType + ", objectId="
-				+ objectId + ", client=" + client + ", sessionId=" + sessionId + ", user=" + user + ", traceId="
-				+ traceId + ", nodeName=" + nodeName + ", hostName=" + hostName + ", podName=" + podName + "]";
+		return "AuditRecord [timestamp=" + timestamp + ", method=" + method + ", uri=" + uri + ", objectType="
+				+ objectType + ", objectId=" + objectId + ", client=" + client + ", sessionId=" + sessionId + ", user="
+				+ user + ", traceId=" + traceId + ", nodeName=" + nodeName + ", hostName=" + hostName + ", podName="
+				+ podName + "]";
 	}
-	
+
 }
