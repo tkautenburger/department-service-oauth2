@@ -54,24 +54,7 @@ public class DepartmentController {
 			    produces = MediaType.APPLICATION_JSON_VALUE)
 	public List<Department> getAll(HttpServletRequest request, HttpServletResponse response) {
 
-		AuditRecord record = new AuditRecord();
-		record.setMethod("GET");
-		record.setUri(request.getRequestURI());
-		record.setClient(request.getRemoteAddr());
-		
-		String user = request.getRemoteUser();
-		if (user != null) {
-			record.setUser(user);
-		}
-		HttpSession session = request.getSession(false);
-		if (session != null) {
-			record.setSessionId(session.getId());
-		}		
-		record.setTraceId(response.getHeader(ResponseLoggingFilter.TRACE_ID));
-		record.setObjectType(Department.class.getName());
-		record.setObjectId(0L);
-		audit.publishAuditMessage(record);
-
+		audit.publishAuditMessage(auditHelper("GET", null, request, response));
 		return repo.findAll();
 	}
 
@@ -83,23 +66,7 @@ public class DepartmentController {
 		Department dept = repo.findById(id).orElseThrow(() -> 
 		  new ResourceNotFoundException(NOT_FOUND + id));
 		
-		AuditRecord record = new AuditRecord();
-		record.setMethod("GET");
-		record.setUri(request.getRequestURI());
-		record.setClient(request.getRemoteAddr());
-		
-		String user = request.getRemoteUser();
-		if (user != null) {
-			record.setUser(user);
-		}
-		HttpSession session = request.getSession(false);
-		if (session != null) {
-			record.setSessionId(session.getId());
-		}		
-		record.setTraceId(response.getHeader(ResponseLoggingFilter.TRACE_ID));
-		record.setObjectType(Department.class.getName());
-		record.setObjectId(dept.getDeptId());
-		audit.publishAuditMessage(record);
+		audit.publishAuditMessage(auditHelper("GET", dept, request, response));
 
 		return dept;
 	}
@@ -120,23 +87,7 @@ public class DepartmentController {
 		persistentDept.setName(dept.getName());
 		persistentDept.setDescription(dept.getDescription());
 		
-		AuditRecord record = new AuditRecord();
-		record.setMethod("CREATE");
-		record.setUri(request.getRequestURI());
-		record.setClient(request.getRemoteAddr());
-		
-		String user = request.getRemoteUser();
-		if (user != null) {
-			record.setUser(user);
-		}
-		HttpSession session = request.getSession(false);
-		if (session != null) {
-			record.setSessionId(session.getId());
-		}		
-		record.setTraceId(response.getHeader(ResponseLoggingFilter.TRACE_ID));
-		record.setObjectType(Department.class.getName());
-		record.setObjectId(persistentDept.getDeptId());
-		audit.publishAuditMessage(record);
+		audit.publishAuditMessage(auditHelper("CREATE", persistentDept, request, response));
 
 		return repo.save(persistentDept);
 	}
@@ -156,23 +107,7 @@ public class DepartmentController {
 		d.setName(dept.getName());
 		d.setDescription(dept.getDescription());
 
-		AuditRecord record = new AuditRecord();
-		record.setMethod("UPDATE");
-		record.setUri(request.getRequestURI());
-		record.setClient(request.getRemoteAddr());
-		
-		String user = request.getRemoteUser();
-		if (user != null) {
-			record.setUser(user);
-		}
-		HttpSession session = request.getSession(false);
-		if (session != null) {
-			record.setSessionId(session.getId());
-		}		
-		record.setTraceId(response.getHeader(ResponseLoggingFilter.TRACE_ID));
-		record.setObjectType(Department.class.getName());
-		record.setObjectId(d.getDeptId());
-		audit.publishAuditMessage(record);
+		audit.publishAuditMessage(auditHelper("UPDATE", d, request, response));
 
 		return repo.save(d);
 	}
@@ -187,10 +122,21 @@ public class DepartmentController {
 			throw new ResourceNotFoundException(NOT_FOUND + id);
 
 		repo.delete(deptOpt.get());
+		audit.publishAuditMessage(auditHelper("DELETE", deptOpt.get(), request, response));
 
-		AuditRecord record = new AuditRecord();
-		record.setMethod("DELETE");
+		return ResponseEntity.ok().build();
+	}
+
+	private AuditRecord auditHelper(String method, Department obj, 
+			HttpServletRequest request, HttpServletResponse response) {
 		
+		AuditRecord record = new AuditRecord();
+		
+		record.setNodeName(System.getenv("NODE_NAME"));
+		record.setHostName(System.getenv("HOSTNAME"));
+		record.setPodName(System.getenv("POD_NAME"));
+		
+		record.setMethod(method);
 		record.setUri(request.getRequestURI());
 		record.setClient(request.getRemoteAddr());
 		
@@ -203,11 +149,9 @@ public class DepartmentController {
 			record.setSessionId(session.getId());
 		}		
 		record.setTraceId(response.getHeader(ResponseLoggingFilter.TRACE_ID));
-		record.setObjectType(Department.class.getName());
-		record.setObjectId(deptOpt.get().getDeptId());
+		record.setObjectType(obj.getClass().getName());
+		record.setObjectId(obj.getDeptId());
 		
-		audit.publishAuditMessage(record);
-
-		return ResponseEntity.ok().build();
+		return record;
 	}
 }

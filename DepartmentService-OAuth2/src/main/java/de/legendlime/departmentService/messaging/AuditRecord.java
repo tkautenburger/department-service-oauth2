@@ -10,13 +10,16 @@ public class AuditRecord {
 	String sessionId;
 	String user;
 	String traceId;
+	String nodeName;
+	String hostName;
+	String podName;
 	
 	public AuditRecord() {
 		super();
 	}
 
 	public AuditRecord(String method, String uri, String objectType, long objectId, String client, String sessionId,
-			String user, String traceId) {
+			String user, String traceId, String nodeName, String hostName, String podName) {
 		super();
 		this.method = method;
 		this.uri = uri;
@@ -26,6 +29,9 @@ public class AuditRecord {
 		this.sessionId = sessionId;
 		this.user = user;
 		this.traceId = traceId;
+		this.nodeName = nodeName;
+		this.hostName = hostName;
+		this.podName = podName;
 	}
 
 	public String getMethod() {
@@ -92,14 +98,41 @@ public class AuditRecord {
 		this.traceId = traceId;
 	}
 
+	public String getNodeName() {
+		return nodeName;
+	}
+
+	public void setNodeName(String nodeName) {
+		this.nodeName = nodeName;
+	}
+
+	public String getHostName() {
+		return hostName;
+	}
+
+	public void setHostName(String hostName) {
+		this.hostName = hostName;
+	}
+
+	public String getPodName() {
+		return podName;
+	}
+
+	public void setPodName(String podName) {
+		this.podName = podName;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((client == null) ? 0 : client.hashCode());
+		result = prime * result + ((hostName == null) ? 0 : hostName.hashCode());
 		result = prime * result + ((method == null) ? 0 : method.hashCode());
+		result = prime * result + ((nodeName == null) ? 0 : nodeName.hashCode());
 		result = prime * result + (int) (objectId ^ (objectId >>> 32));
 		result = prime * result + ((objectType == null) ? 0 : objectType.hashCode());
+		result = prime * result + ((podName == null) ? 0 : podName.hashCode());
 		result = prime * result + ((sessionId == null) ? 0 : sessionId.hashCode());
 		result = prime * result + ((traceId == null) ? 0 : traceId.hashCode());
 		result = prime * result + ((uri == null) ? 0 : uri.hashCode());
@@ -121,10 +154,20 @@ public class AuditRecord {
 				return false;
 		} else if (!client.equals(other.client))
 			return false;
+		if (hostName == null) {
+			if (other.hostName != null)
+				return false;
+		} else if (!hostName.equals(other.hostName))
+			return false;
 		if (method == null) {
 			if (other.method != null)
 				return false;
 		} else if (!method.equals(other.method))
+			return false;
+		if (nodeName == null) {
+			if (other.nodeName != null)
+				return false;
+		} else if (!nodeName.equals(other.nodeName))
 			return false;
 		if (objectId != other.objectId)
 			return false;
@@ -132,6 +175,11 @@ public class AuditRecord {
 			if (other.objectType != null)
 				return false;
 		} else if (!objectType.equals(other.objectType))
+			return false;
+		if (podName == null) {
+			if (other.podName != null)
+				return false;
+		} else if (!podName.equals(other.podName))
 			return false;
 		if (sessionId == null) {
 			if (other.sessionId != null)
@@ -160,7 +208,7 @@ public class AuditRecord {
 	public String toString() {
 		return "AuditRecord [method=" + method + ", uri=" + uri + ", objectType=" + objectType + ", objectId="
 				+ objectId + ", client=" + client + ", sessionId=" + sessionId + ", user=" + user + ", traceId="
-				+ traceId + "]";
+				+ traceId + ", nodeName=" + nodeName + ", hostName=" + hostName + ", podName=" + podName + "]";
 	}
 	
 }
