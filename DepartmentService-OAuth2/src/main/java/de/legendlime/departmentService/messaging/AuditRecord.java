@@ -1,7 +1,5 @@
 package de.legendlime.departmentService.messaging;
 
-import java.time.Instant;
-
 public class AuditRecord {
 	
 	String timestamp;
@@ -16,13 +14,14 @@ public class AuditRecord {
 	String nodeName;
 	String hostName;
 	String podName;
+	String jsonObject;
 	
 	public AuditRecord() {
 		super();
 	}
 
 	public AuditRecord(String method, String uri, String objectType, long objectId, String client, String sessionId,
-			String user, String traceId, String nodeName, String hostName, String podName) {
+			String user, String traceId, String nodeName, String hostName, String podName, String jsonObject) {
 		super();
 		this.method = method;
 		this.uri = uri;
@@ -35,6 +34,7 @@ public class AuditRecord {
 		this.nodeName = nodeName;
 		this.hostName = hostName;
 		this.podName = podName;
+		this.jsonObject = jsonObject;
 	}
 
 	public String getMethod() {
@@ -133,18 +133,28 @@ public class AuditRecord {
 		this.timestamp = timestamp;
 	}
 
+	public String getJsonObject() {
+		return jsonObject;
+	}
+
+	public void setJsonObject(String jsonObject) {
+		this.jsonObject = jsonObject;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((client == null) ? 0 : client.hashCode());
 		result = prime * result + ((hostName == null) ? 0 : hostName.hashCode());
+		result = prime * result + ((jsonObject == null) ? 0 : jsonObject.hashCode());
 		result = prime * result + ((method == null) ? 0 : method.hashCode());
 		result = prime * result + ((nodeName == null) ? 0 : nodeName.hashCode());
 		result = prime * result + (int) (objectId ^ (objectId >>> 32));
 		result = prime * result + ((objectType == null) ? 0 : objectType.hashCode());
 		result = prime * result + ((podName == null) ? 0 : podName.hashCode());
 		result = prime * result + ((sessionId == null) ? 0 : sessionId.hashCode());
+		result = prime * result + ((timestamp == null) ? 0 : timestamp.hashCode());
 		result = prime * result + ((traceId == null) ? 0 : traceId.hashCode());
 		result = prime * result + ((uri == null) ? 0 : uri.hashCode());
 		result = prime * result + ((user == null) ? 0 : user.hashCode());
@@ -169,6 +179,11 @@ public class AuditRecord {
 			if (other.hostName != null)
 				return false;
 		} else if (!hostName.equals(other.hostName))
+			return false;
+		if (jsonObject == null) {
+			if (other.jsonObject != null)
+				return false;
+		} else if (!jsonObject.equals(other.jsonObject))
 			return false;
 		if (method == null) {
 			if (other.method != null)
@@ -197,6 +212,11 @@ public class AuditRecord {
 				return false;
 		} else if (!sessionId.equals(other.sessionId))
 			return false;
+		if (timestamp == null) {
+			if (other.timestamp != null)
+				return false;
+		} else if (!timestamp.equals(other.timestamp))
+			return false;
 		if (traceId == null) {
 			if (other.traceId != null)
 				return false;
@@ -220,7 +240,6 @@ public class AuditRecord {
 		return "AuditRecord [timestamp=" + timestamp + ", method=" + method + ", uri=" + uri + ", objectType="
 				+ objectType + ", objectId=" + objectId + ", client=" + client + ", sessionId=" + sessionId + ", user="
 				+ user + ", traceId=" + traceId + ", nodeName=" + nodeName + ", hostName=" + hostName + ", podName="
-				+ podName + "]";
+				+ podName + ", jsonObject=" + jsonObject + "]";
 	}
-
 }

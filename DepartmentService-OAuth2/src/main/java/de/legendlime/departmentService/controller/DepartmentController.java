@@ -25,6 +25,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import de.legendlime.departmentService.config.logging.ResponseLoggingFilter;
 import de.legendlime.departmentService.domain.Department;
 import de.legendlime.departmentService.domain.DepartmentDTO;
@@ -157,6 +160,17 @@ public class DepartmentController {
 			record.setObjectType(obj.getClass().getName());
 			record.setObjectId(obj.getDeptId());
 		}
+		if ("CREATE".equalsIgnoreCase(method) || "UPDATE".equalsIgnoreCase(method)) {
+			//Creating the ObjectMapper object
+		    ObjectMapper mapper = new ObjectMapper();
+		    //Converting the Object to JSONString
+			try {
+				record.setJsonObject(mapper.writeValueAsString(obj));
+			} catch (JsonProcessingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}		
 		return record;
 	}
 }
