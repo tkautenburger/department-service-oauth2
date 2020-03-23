@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
+import java.security.UnrecoverableEntryException;
 import java.security.cert.CertificateException;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -34,16 +36,20 @@ public class SslStoreProviderBean implements SslStoreProvider {
 	private VaultPkiProperties pkiProperties;
 	
 	public SslStoreProviderBean(KeyStoreBean keyStoreBean, TrustStoreBean trustStoreBean, VaultPkiProperties pkiProperties) 
-			throws FileNotFoundException, IOException, KeyStoreException, NoSuchAlgorithmException, CertificateException {
+			throws FileNotFoundException, IOException, KeyStoreException, NoSuchAlgorithmException, CertificateException, UnrecoverableEntryException {
 		this.keyStore = keyStoreBean.getKeyStore();
 		this.trustStore = trustStoreBean.getTrustStore();
 		this.pkiProperties = pkiProperties;
 		if (pkiProperties.isPersistEnabled()) {
 			// store keystore in file system
 			char[] pwdArray = System.getenv("KEY_STORE_PASSWORD").toCharArray();
+			KeyStore.PrivateKeyEntry pkEntry = (KeyStore.PrivateKeyEntry) this.keyStore.getEntry("vault", null);
+			PrivateKey privateKey = pkEntry.getPrivateKey();
+			this.keyStore.setKeyEntry("vault", privateKey, pwdArray, pkEntry.getCertificateChain());
 			try (FileOutputStream fos = new FileOutputStream(System.getenv("KEY_STORE_PATH"))) {
 				this.keyStore.store(fos, pwdArray);
 			}
+			this.keyStore.setKeyEntry("vault", privateKey, "".toCharArray(), pkEntry.getCertificateChain());
 		}
 	}
 
@@ -58,15 +64,19 @@ public class SslStoreProviderBean implements SslStoreProvider {
 	}	
 	
 	public void renew(KeyStoreBean keyStoreBean, TrustStoreBean trustStoreBean) 
-			throws FileNotFoundException, IOException, KeyStoreException, NoSuchAlgorithmException, CertificateException {
+			throws FileNotFoundException, IOException, KeyStoreException, NoSuchAlgorithmException, CertificateException, UnrecoverableEntryException {
 		this.keyStore = keyStoreBean.getKeyStore();
 		this.trustStore = trustStoreBean.getTrustStore();
 		if (pkiProperties.isPersistEnabled()) {
 			// store keystore in file system
 			char[] pwdArray = System.getenv("KEY_STORE_PASSWORD").toCharArray();
+			KeyStore.PrivateKeyEntry pkEntry = (KeyStore.PrivateKeyEntry) this.keyStore.getEntry("vault", null);
+			PrivateKey privateKey = pkEntry.getPrivateKey();
+			this.keyStore.setKeyEntry("vault", privateKey, pwdArray, pkEntry.getCertificateChain());
 			try (FileOutputStream fos = new FileOutputStream(System.getenv("KEY_STORE_PATH"))) {
 				this.keyStore.store(fos, pwdArray);
 			}
+			this.keyStore.setKeyEntry("vault", privateKey, "".toCharArray(), pkEntry.getCertificateChain());
 		}
 	}
 }
