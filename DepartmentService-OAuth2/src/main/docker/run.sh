@@ -13,5 +13,7 @@ java -Dspring.profiles.active=$PROFILE \
      -Dlegendlime.https-port=$HTTPS_SERVER_PORT \
      -Djavax.net.ssl.trustStore=$TRUST_STORE_PATH \
      -Djavax.net.ssl.trustStorePassword=$TRUST_STORE_PASSWORD \
+     -Djavax.net.ssl.keyStore=$KEY_STORE_PATH \
+     -Djavax.net.ssl.keyStorePassword=$KEY_STORE_PASSWORD \
 	 $HEAP_OPTIONS \
 	 -jar /usr/local/@docker.image.folder@/@project.build.finalName@.jar

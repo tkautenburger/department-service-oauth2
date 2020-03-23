@@ -19,16 +19,16 @@ spring:
   datasource:
     # url: jdbc:h2:mem:demo
     url: jdbc:postgresql://demodb:5432/demo?ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory
-    # this configuration should go to vault
-    # username: 
-    # password: 
+    # this configuration comes from Vault
+    # username: <this is stored in vault>
+    # password: <this is stored in vault>
   jpa:
     properties:
       hibernate: 
         jdbc:
           lob:
             non_contextual_creation: true
-
+            
 #--------------------------------------
 # Consul Configuration
 #--------------------------------------
@@ -42,8 +42,7 @@ spring:
         hostname: department-service.default.svc.cluster.local
         port: 8082
         healthCheckPath: /actuator/health
-        healthCheckInterval: 20s
-
+        healthCheckInterval: 60s
 
 #--------------------------------------
 # Cloud Streams Kafka Configuration
@@ -67,6 +66,8 @@ spring:
                     binder:
                       zkNodes: kafka-zookeeper-0.kafka-zookeeper-headless.messaging.svc.cluster.local:2182
                       brokers: kafka-0.kafka-headless.messaging.svc.cluster.local:9092
+                      # SSL configuration requires to have truststore and keystore in file system thus Kafka in the current 
+                      # version does not provide a custom SSL context loader
 
 #--------------------------------------
 # Vault CA Configuration
@@ -80,14 +81,25 @@ pki:
   - department-service.default.svc.cluster.local
   - department-service-oauth2
   - department-service-oauth2.default.svc.cluster.local
+  # Redis URL to provide distributed lock
+  redis-url: redis://redis:6379
+
+legendlime:
 
 #--------------------------------------
 # Rate Limiting Configuration
 #--------------------------------------
 
-legendlime:
   ratelimit:
-    average: 50d
+    # maximum average request rate per second
+    average: 10d
+
+#--------------------------------------
+# OPA Policy Based Authorization 
+#--------------------------------------
+  opa:
+    enabled: true
+    opa-url: https://opa:8181/v1/data/http/authz/allow
 
 #--------------------------------------
 # Tracing Configuration
@@ -95,7 +107,7 @@ legendlime:
 
 opentracing:
   jaeger:
-    log-spans: false
+    log-spans: true
     udp-sender:
       host: jaeger-agent
       port: 6831
@@ -135,8 +147,7 @@ security:
 # These parameters are not needed if this service acts only as a resource server
     client:
       client-id: department-service
-      # This one must go to Vault secrets
-      client-secret: 3a8cac7a-3136-4a2b-9b71-ae425b9ebfd4
+     # client-secret: <this is stored in vault>
       user-authorization-uri: ${rest.security.issuer-uri}/protocol/openid-connect/auth
       access-token-uri: ${rest.security.issuer-uri}/protocol/openid-connect/token
       scope: openid
@@ -148,13 +159,15 @@ security:
 
 logging:
   level:
-    io.opentracing.contrib: error
+    de.legendlime: INFO
+    io.jaegertracing: ERROR
+    io.opentracing.contrib: ERROR
     org:
       springframework:
         boot:
           autoconfigure:
             logging: INFO
         security: INFO
-      legendlime: INFO
+        web.filter.CommonsRequestLoggingFilter: ERROR
       root: INFO 
-      
+

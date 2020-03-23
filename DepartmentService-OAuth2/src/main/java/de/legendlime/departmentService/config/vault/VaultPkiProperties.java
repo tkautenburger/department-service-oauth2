@@ -25,6 +25,11 @@ public class VaultPkiProperties implements VaultSecretBackendDescriptor {
 	private boolean enabled = true;
 
 	/**
+	 * Enable file system storage for keystore and truststore.
+	 */
+	private boolean persistEnabled = true;
+
+	/**
 	 * Role name for credentials.
 	 */
 	private String role;
@@ -128,6 +133,14 @@ public class VaultPkiProperties implements VaultSecretBackendDescriptor {
 		this.redisUrl = redisUrl;
 	}
 
+	public boolean isPersistEnabled() {
+		return persistEnabled;
+	}
+
+	public void setPersistEnabled(boolean persistEnabled) {
+		this.persistEnabled = persistEnabled;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -188,9 +201,9 @@ public class VaultPkiProperties implements VaultSecretBackendDescriptor {
 
 	@Override
 	public String toString() {
-		return "VaultPkiProperties [enabled=" + enabled + ", role=" + role + ", backend=" + backend + ", commonName="
-				+ commonName + ", altNames=" + altNames + ", reuseValidCertificate=" + reuseValidCertificate
-				+ ", startupLockTimeout=" + startupLockTimeout + ", redisUrl=" + redisUrl + "]";
-	}
-	
+		return "VaultPkiProperties [enabled=" + enabled + ", persistEnabled=" + persistEnabled + ", role=" + role
+				+ ", backend=" + backend + ", commonName=" + commonName + ", altNames=" + altNames
+				+ ", reuseValidCertificate=" + reuseValidCertificate + ", startupLockTimeout=" + startupLockTimeout
+				+ ", redisUrl=" + redisUrl + "]";
+	}	
 }
