@@ -43,7 +43,8 @@ public class SslStoreProviderBean implements SslStoreProvider {
 		if (pkiProperties.isPersistEnabled()) {
 			// store keystore in file system
 			char[] pwdArray = System.getenv("KEY_STORE_PASSWORD").toCharArray();
-			KeyStore.PrivateKeyEntry pkEntry = (KeyStore.PrivateKeyEntry) this.keyStore.getEntry("vault", null);
+			KeyStore.ProtectionParameter protParam = new KeyStore.PasswordProtection("".toCharArray());
+			KeyStore.PrivateKeyEntry pkEntry = (KeyStore.PrivateKeyEntry) this.keyStore.getEntry("vault", protParam);
 			PrivateKey privateKey = pkEntry.getPrivateKey();
 			this.keyStore.setKeyEntry("vault", privateKey, pwdArray, pkEntry.getCertificateChain());
 			try (FileOutputStream fos = new FileOutputStream(System.getenv("KEY_STORE_PATH"))) {
