@@ -19,11 +19,11 @@ import de.legendlime.departmentService.config.cert.TrustStoreBean;
 import de.legendlime.departmentService.config.vault.VaultPkiProperties;
 
 /**
- * Spring bean containing SSL configuration with key store and trust store
- * This bean will be loaded into the containers SSL configuration each
- * time a certificate must be renewed
+ * Spring bean containing SSL configuration with key store and trust store This
+ * bean will be loaded into the containers SSL configuration each time a
+ * certificate must be renewed
  * 
- * @author  Thomas Kautenburger
+ * @author Thomas Kautenburger
  * @version 1.0
  *
  */
@@ -31,26 +31,20 @@ import de.legendlime.departmentService.config.vault.VaultPkiProperties;
 @Component
 @ConditionalOnProperty(prefix = "server.ssl", name = "enabled", havingValue = "true")
 public class SslStoreProviderBean implements SslStoreProvider {
-	
+
 	private KeyStore keyStore, trustStore;
 	private VaultPkiProperties pkiProperties;
-	
-	public SslStoreProviderBean(KeyStoreBean keyStoreBean, TrustStoreBean trustStoreBean, VaultPkiProperties pkiProperties) 
-			throws FileNotFoundException, IOException, KeyStoreException, NoSuchAlgorithmException, CertificateException, UnrecoverableEntryException {
+
+	public SslStoreProviderBean(KeyStoreBean keyStoreBean, TrustStoreBean trustStoreBean,
+			VaultPkiProperties pkiProperties) throws FileNotFoundException, IOException, KeyStoreException,
+			NoSuchAlgorithmException, CertificateException, UnrecoverableEntryException {
 		this.keyStore = keyStoreBean.getKeyStore();
 		this.trustStore = trustStoreBean.getTrustStore();
 		this.pkiProperties = pkiProperties;
 		if (pkiProperties.isPersistEnabled()) {
-			// store keystore in file system, private key entry must be password protected for Kafka to work with the keystore
-			char[] pwdArray = System.getenv("KEY_STORE_PASSWORD").toCharArray();
-			KeyStore.ProtectionParameter protParam = new KeyStore.PasswordProtection("".toCharArray());
-			KeyStore.PrivateKeyEntry pkEntry = (KeyStore.PrivateKeyEntry) this.keyStore.getEntry("vault", protParam);
-			PrivateKey privateKey = pkEntry.getPrivateKey();
-			this.keyStore.setKeyEntry("vault", privateKey, pwdArray, pkEntry.getCertificateChain());
-			try (FileOutputStream fos = new FileOutputStream(System.getenv("KEY_STORE_PATH"))) {
-				this.keyStore.store(fos, pwdArray);
-			}
-			this.keyStore.setKeyEntry("vault", privateKey, "".toCharArray(), pkEntry.getCertificateChain());
+			// store keystore in file system, private key entry must be password protected
+			// for Kafka to work with the keystore
+			keyStorePersister(this.keyStore);
 		}
 	}
 
@@ -62,23 +56,31 @@ public class SslStoreProviderBean implements SslStoreProvider {
 	@Override
 	public KeyStore getTrustStore() throws Exception {
 		return trustStore;
-	}	
-	
-	public void renew(KeyStoreBean keyStoreBean, TrustStoreBean trustStoreBean) 
-			throws FileNotFoundException, IOException, KeyStoreException, NoSuchAlgorithmException, CertificateException, UnrecoverableEntryException {
+	}
+
+	public void renew(KeyStoreBean keyStoreBean, TrustStoreBean trustStoreBean)
+			throws FileNotFoundException, IOException, KeyStoreException, NoSuchAlgorithmException,
+			CertificateException, UnrecoverableEntryException {
 		this.keyStore = keyStoreBean.getKeyStore();
 		this.trustStore = trustStoreBean.getTrustStore();
 		if (pkiProperties.isPersistEnabled()) {
-			// store keystore in file system, private key entry must be password protected for Kafka to work with the keystore
-			char[] pwdArray = System.getenv("KEY_STORE_PASSWORD").toCharArray();
-			KeyStore.ProtectionParameter protParam = new KeyStore.PasswordProtection("".toCharArray());
-			KeyStore.PrivateKeyEntry pkEntry = (KeyStore.PrivateKeyEntry) this.keyStore.getEntry("vault", protParam);
-			PrivateKey privateKey = pkEntry.getPrivateKey();
-			this.keyStore.setKeyEntry("vault", privateKey, pwdArray, pkEntry.getCertificateChain());
-			try (FileOutputStream fos = new FileOutputStream(System.getenv("KEY_STORE_PATH"))) {
-				this.keyStore.store(fos, pwdArray);
-			}
-			this.keyStore.setKeyEntry("vault", privateKey, "".toCharArray(), pkEntry.getCertificateChain());
+			// store keystore in file system, private key entry must be password protected
+			// for Kafka to work with the keystore
+			keyStorePersister(this.keyStore);
 		}
+	}
+
+	private void keyStorePersister(KeyStore keystore) throws KeyStoreException, FileNotFoundException, IOException,
+			NoSuchAlgorithmException, UnrecoverableEntryException, CertificateException {
+		char[] pwdArray = System.getenv("KEY_STORE_PASSWORD").toCharArray();
+		KeyStore.ProtectionParameter protParam = new KeyStore.PasswordProtection("".toCharArray());
+		KeyStore.PrivateKeyEntry pkEntry = (KeyStore.PrivateKeyEntry) keyStore.getEntry("vault", protParam);
+		PrivateKey privateKey = pkEntry.getPrivateKey();
+		keyStore.setKeyEntry("vault", privateKey, pwdArray, pkEntry.getCertificateChain());
+		try (FileOutputStream fos = new FileOutputStream(System.getenv("KEY_STORE_PATH"))) {
+			keyStore.store(fos, pwdArray);
+		}
+		keyStore.setKeyEntry("vault", privateKey, "".toCharArray(), pkEntry.getCertificateChain());
+
 	}
 }

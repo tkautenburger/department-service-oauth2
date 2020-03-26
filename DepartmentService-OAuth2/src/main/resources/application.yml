@@ -65,7 +65,15 @@ spring:
                   kafka:
                     binder:
                       zkNodes: kafka-zookeeper-0.kafka-zookeeper-headless.messaging.svc.cluster.local:2182
-                      brokers: kafka-0.kafka-headless.messaging.svc.cluster.local:9092
+                      brokers: kafka-0.kafka-headless.messaging.svc.cluster.local:9093
+                      configuration:
+                        security.protocol: SSL
+                        ssl.truststore.location: ${TRUST_STORE_PATH}
+                        ssl.truststore.password: ${TRUST_STORE_PASSWORD}
+                        ssl.keystore.location: ${KEY_STORE_PATH}
+                        ssl.keystore.password: ${KEY_STORE_PASSWORD}
+                        ssl.key.password: ${KEY_STORE_PASSWORD}
+
                       # SSL configuration requires to have truststore and keystore in file system thus Kafka in the current 
                       # version does not provide a custom SSL context loader
 
