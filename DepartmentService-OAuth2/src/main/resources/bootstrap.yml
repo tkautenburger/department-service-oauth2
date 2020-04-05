@@ -5,9 +5,9 @@ spring:
     
   cloud:
     consul:
-      port: 8543
-      host: consul
-      scheme: https
+      port: ${CONSUL_PORT}
+      host: ${CONSUL_SERVER}
+      scheme: ${CONSUL_SCHEME}
 
       config:
         enabled: true
@@ -17,9 +17,9 @@ spring:
 
         
     vault:
-      host: vault
-      port: 8200
-      scheme: https
+      host: ${CONSUL_SERVER}
+      port: ${CONSUL_PORT}
+      scheme: ${VAULT_SCHEME}
       # Vault AppRole authentication scheme
       authentication: approle
       app-role:
