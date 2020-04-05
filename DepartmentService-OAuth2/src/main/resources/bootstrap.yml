@@ -1,7 +1,6 @@
 spring:
   application:
     name: DepartmentServiceOAuth2
-
     
   cloud:
     consul:
@@ -15,7 +14,6 @@ spring:
         # getting consul ACL token from OS environment
         acl-token: ${CONSUL_DEPARTMENT_ACL_TOKEN}
 
-        
     vault:
       host: ${CONSUL_SERVER}
       port: ${CONSUL_PORT}
