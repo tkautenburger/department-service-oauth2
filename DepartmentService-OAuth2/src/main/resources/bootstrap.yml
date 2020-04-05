@@ -15,8 +15,8 @@ spring:
         acl-token: ${CONSUL_DEPARTMENT_ACL_TOKEN}
 
     vault:
-      host: ${CONSUL_SERVER}
-      port: ${CONSUL_PORT}
+      host: ${VAULT_SERVER}
+      port: ${VAULT_PORT}
       scheme: ${VAULT_SCHEME}
       # Vault AppRole authentication scheme
       authentication: approle
