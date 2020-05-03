@@ -34,9 +34,11 @@ import de.legendlime.departmentService.domain.DepartmentDTO;
 import de.legendlime.departmentService.messaging.AuditRecord;
 import de.legendlime.departmentService.messaging.AuditSourceBean;
 import de.legendlime.departmentService.repository.DepartmentRepository;
+import io.micrometer.core.annotation.Timed;
 
 @RestController
 @RequestMapping(value = "v1")
+@Timed
 public class DepartmentController {
 	
 	private static final String NOT_FOUND = "Department not found, ID: ";

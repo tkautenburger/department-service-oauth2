@@ -194,4 +194,6 @@ management:
         enabled: true
         step: 15s
         index: metrics
-        host: https://elasticsearch.monitoring.svc.cluster.local:9093
+        user-name: elastic
+        password: changeme
+        host: https://elasticsearch.monitoring.svc.cluster.local:9200
