@@ -28,7 +28,7 @@ public class RedissonConfig {
 	@ConditionalOnProperty(prefix = "server.ssl", name = "enabled", havingValue = "true")
 	public static RedissonClient reddissonClient(VaultPkiProperties pkiProperties) {
 		Config config = new Config();
-		config.useSingleServer().setAddress(pkiProperties.getRedisUrl());
+		config.useSingleServer().setPassword(System.getenv("REDIS_PASSWORD")).setAddress(pkiProperties.getRedisUrl());
 		RedissonClient redisson = Redisson.create(config);
 		return redisson;
 	}
