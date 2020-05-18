@@ -39,7 +39,7 @@ public class OPARole {
 
 	@Override
 	public String toString() {
-		return "OPARole [role=" + role + "]";
+		return role;
 	}
 
 }

@@ -76,6 +76,8 @@ public class OPAVoter implements AccessDecisionVoter<Object> {
             return ACCESS_DENIED;
         }
         LOG.debug("Access granted for the authorities: {}", response.getOpaRole());
+        // add authorities to response header
+        filter.getResponse().addHeader("authorities", response.getOpaRole().toString());
         return ACCESS_GRANTED;
     }
 

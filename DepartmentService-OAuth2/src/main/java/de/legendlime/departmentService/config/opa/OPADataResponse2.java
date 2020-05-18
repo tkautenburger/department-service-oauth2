@@ -18,4 +18,9 @@ public class OPADataResponse2 {
 		this.opaRole = opaRole;
 	}
 
+	@Override
+	public String toString() {
+		return "[authority=" + opaRole + "]";
+	}
+
 }
