@@ -5,22 +5,22 @@ import java.util.List;
 
 public class OPADataResponse2 {
 
-    private List<OPARole> opaRole = new ArrayList<OPARole>();;
+    private List<OPARole> result = new ArrayList<OPARole>();;
 
     public OPADataResponse2() {
     }
 
-	public List<OPARole> getOpaRole() {
-		return opaRole;
+	public List<OPARole> getResult() {
+		return result;
 	}
 
-	public void setOpaRole(List<OPARole> opaRole) {
-		this.opaRole = opaRole;
+	public void setResult(List<OPARole> result) {
+		this.result = result;
 	}
 
 	@Override
 	public String toString() {
-		return "[authority=" + opaRole + "]";
+		return "[authority=" + result + "]";
 	}
 
 }
