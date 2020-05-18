@@ -92,22 +92,27 @@ pki:
   # Redis URL to provide distributed lock
   redis-url: redis://redis:6379
 
+
+#**************************************
+# Custom Configurations
+#**************************************
+
 legendlime:
 
-#--------------------------------------
-# Rate Limiting Configuration
-#--------------------------------------
-
+  #--------------------------------------
+  # Rate Limiting Configuration
+  #--------------------------------------
   ratelimit:
     # maximum average request rate per second
     average: 10d
 
-#--------------------------------------
-# OPA Policy Based Authorization 
-#--------------------------------------
+  #--------------------------------------
+  # OPA Policy Based Authorization 
+  #--------------------------------------
   opa:
     enabled: true
     opa-url: https://opa:8181/v1/data/http/authz/allow
+
 
 #--------------------------------------
 # Tracing Configuration

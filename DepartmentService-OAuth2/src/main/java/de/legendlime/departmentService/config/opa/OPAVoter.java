@@ -5,6 +5,8 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpEntity;
 import org.springframework.security.access.AccessDecisionVoter;
 import org.springframework.security.access.ConfigAttribute;
@@ -14,7 +16,8 @@ import org.springframework.security.web.FilterInvocation;
 import de.legendlime.departmentService.config.client.RestTemplateBean;
 
 public class OPAVoter implements AccessDecisionVoter<Object> {
-
+  
+	private static final Logger LOG = LoggerFactory.getLogger(AccessDecisionVoter.class);
     private RestTemplateBean restTemplateBean;	
     private String opaUrl;
 
@@ -54,10 +57,8 @@ public class OPAVoter implements AccessDecisionVoter<Object> {
         input.put("auth", authentication);
         input.put("method", filter.getRequest().getMethod());
         input.put("path", path);
-        input.put("headers", headers);
-
-        // TODO: change this section to implement fine grained access control based on data filters
-
+        input.put("headers", headers);       
+/*
         HttpEntity<?> request = new HttpEntity<>(new OPADataRequest(input));
         OPADataResponse response = restTemplateBean.getRestTemplate()
         		.postForObject(this.opaUrl, request, OPADataResponse.class);
@@ -65,7 +66,16 @@ public class OPAVoter implements AccessDecisionVoter<Object> {
         if (!response.getResult()) {
             return ACCESS_DENIED;
         }
-
+*/
+        HttpEntity<?> request = new HttpEntity<>(new OPADataRequest(input));
+        OPADataResponse2 response = restTemplateBean.getRestTemplate()
+        		.postForObject(this.opaUrl, request, OPADataResponse2.class);
+        
+        if (response.getOpaRole().isEmpty()) {
+        	LOG.debug("Access denied. Empty class list in OPA response.");
+            return ACCESS_DENIED;
+        }
+        LOG.debug("Access granted for the authorities: {}", response.getOpaRole());
         return ACCESS_GRANTED;
     }
 
