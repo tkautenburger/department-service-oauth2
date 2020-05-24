@@ -71,14 +71,14 @@ public class OPAVoter implements AccessDecisionVoter<Object> {
         OPADataResponse2 response = restTemplateBean.getRestTemplate()
         		.postForObject(this.opaUrl, request, OPADataResponse2.class);
         
-        if (response.getResult() == null) {
+        if (response.getResult() == null || response.getResult().isEmpty()) {
         	LOG.debug("Access denied. Empty result in OPA response.");
             return ACCESS_DENIED;
         }
-        LOG.debug("Access granted for the authorities: {}", response.getResult());
+        LOG.debug("Access granted for authorities: {}", response.getResult());
         // add authorities and policy version to response header
-        filter.getResponse().addHeader("authorities", response.getResult().getRole());
-        filter.getResponse().addHeader("policy-version", response.getResult().getVersion());
+        filter.getResponse().addHeader("policy-authority", response.getResult().get(0).getRole());
+        filter.getResponse().addHeader("policy-version", response.getResult().get(0).getVersion());
         return ACCESS_GRANTED;
     }
 

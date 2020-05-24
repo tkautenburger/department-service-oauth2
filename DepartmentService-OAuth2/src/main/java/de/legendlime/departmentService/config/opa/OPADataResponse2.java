@@ -1,17 +1,20 @@
 package de.legendlime.departmentService.config.opa;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class OPADataResponse2 {
 	
-    private OPAResult result;
+    private List<OPAResult> result = new ArrayList<>();;
 
     public OPADataResponse2() {
     }
 
-	public OPAResult getResult() {
+	public List<OPAResult> getResult() {
 		return result;
 	}
 
-	public void setResult(OPAResult result) {
+	public void setResult(List<OPAResult> result) {
 		this.result = result;
 	}
 
