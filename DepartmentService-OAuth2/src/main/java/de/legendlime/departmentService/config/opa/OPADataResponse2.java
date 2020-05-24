@@ -5,7 +5,7 @@ import java.util.List;
 
 public class OPADataResponse2 {
 	
-    private List<OPAResult> result = new ArrayList<>();;
+    private List<OPAResult> result = new ArrayList<>();
 
     public OPADataResponse2() {
     }
