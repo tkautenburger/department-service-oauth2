@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.security.access.AccessDecisionVoter;
 import org.springframework.security.access.ConfigAttribute;
@@ -20,6 +21,9 @@ public class OPAVoter implements AccessDecisionVoter<Object> {
 	private static final Logger LOG = LoggerFactory.getLogger(AccessDecisionVoter.class);
     private RestTemplateBean restTemplateBean;	
     private String opaUrl;
+    
+    @Autowired
+    OPAProperties opaProperties;
 
     public OPAVoter(String opaUrl, RestTemplateBean restTemplateBean) {
         this.opaUrl = opaUrl;
@@ -79,7 +83,11 @@ public class OPAVoter implements AccessDecisionVoter<Object> {
         // add authorities and policy version to response header
         filter.getResponse().addHeader("policy-authority", response.getResult().get(0).getRole());
         filter.getResponse().addHeader("policy-version", response.getResult().get(0).getVersion());
-        return ACCESS_GRANTED;
+
+		// store latest policy version in OPA properties
+		opaProperties.setPolicyVersion(response.getResult().get(0).getVersion());
+
+		return ACCESS_GRANTED;
     }
 
 }
