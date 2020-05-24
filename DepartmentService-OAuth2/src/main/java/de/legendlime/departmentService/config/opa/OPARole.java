@@ -1,8 +1,20 @@
 package de.legendlime.departmentService.config.opa;
 
-public class OPARole {
+import java.io.Serializable;
+
+public class OPARole implements Serializable {
 	
+	private static final long serialVersionUID = 1L;
 	private String role;
+
+	public OPARole() {
+		super();
+	}
+
+	public OPARole(String role) {
+		super();
+		this.role = role;
+	}
 
 	public String getRole() {
 		return role;
