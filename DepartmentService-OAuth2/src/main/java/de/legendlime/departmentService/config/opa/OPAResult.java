@@ -2,18 +2,28 @@ package de.legendlime.departmentService.config.opa;
 
 import java.io.Serializable;
 
-public class OPARole implements Serializable {
+public class OPAResult implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
+	private String version;
 	private String role;
 
-	public OPARole() {
+	public OPAResult() {
 		super();
 	}
 
-	public OPARole(String role) {
+	public OPAResult(String version, String role) {
 		super();
+		this.version = version;
 		this.role = role;
+	}
+
+	public String getVersion() {
+		return version;
+	}
+
+	public void setVersion(String version) {
+		this.version = version;
 	}
 
 	public String getRole() {
@@ -29,6 +39,7 @@ public class OPARole implements Serializable {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((role == null) ? 0 : role.hashCode());
+		result = prime * result + ((version == null) ? 0 : version.hashCode());
 		return result;
 	}
 
@@ -40,18 +51,24 @@ public class OPARole implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		OPARole other = (OPARole) obj;
+		OPAResult other = (OPAResult) obj;
 		if (role == null) {
 			if (other.role != null)
 				return false;
 		} else if (!role.equals(other.role))
+			return false;
+		if (version == null) {
+			if (other.version != null)
+				return false;
+		} else if (!version.equals(other.version))
 			return false;
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		return role;
+		return "OPARole [version=" + version + ", role=" + role + "]";
 	}
+
 
 }

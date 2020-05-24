@@ -11,6 +11,7 @@ public class OPAProperties {
 	
 	private boolean enabled = false;
 	private String opaUrl;
+	private String policyVersion = "1";
 	
 	public boolean isEnabled() {
 		return enabled;
@@ -24,6 +25,11 @@ public class OPAProperties {
 	public void setOpaUrl(String opaUrl) {
 		this.opaUrl = opaUrl;
 	}
-	
+	public String getPolicyVersion() {
+		return policyVersion;
+	}
+	public void setPolicyVersion(String policyVersion) {
+		this.policyVersion = policyVersion;
+	}	
 
 }
