@@ -29,25 +29,12 @@ spring:
           lob:
             non_contextual_creation: true
             
-#--------------------------------------
-# Consul Configuration
-#--------------------------------------
-
-  cloud:
-    consul:
-      discovery:
-        enabled: false
-        scheme: http
-        instanceId: ${spring.application.name}
-        hostname: department-service.default.svc.cluster.local
-        port: 8082
-        healthCheckPath: /actuator/health
-        healthCheckInterval: 60s
 
 #--------------------------------------
 # Cloud Streams Kafka Configuration
 #--------------------------------------
  
+  cloud:
     stream:
       bindings:
         output:

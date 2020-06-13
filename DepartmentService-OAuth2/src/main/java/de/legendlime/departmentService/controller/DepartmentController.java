@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.http.HttpStatus;
@@ -41,6 +43,7 @@ import io.micrometer.core.annotation.Timed;
 @Timed
 public class DepartmentController {
 	
+	private static final Logger LOG = LoggerFactory.getLogger(DepartmentController.class);
 	private static final String NOT_FOUND = "Department not found, ID: ";
 	private static final String NOT_NULL = "Department cannot be null";
 
@@ -162,15 +165,15 @@ public class DepartmentController {
 			record.setObjectType(obj.getClass().getName());
 			record.setObjectId(obj.getDeptId());
 		}
-		if ("CREATE".equalsIgnoreCase(method) || "UPDATE".equalsIgnoreCase(method)) {
+		if (obj != null && ("CREATE".equalsIgnoreCase(method) || "UPDATE".equalsIgnoreCase(method))) {
 			//Creating the ObjectMapper object
 		    ObjectMapper mapper = new ObjectMapper();
 		    //Converting the Object to JSONString
 			try {
 				record.setJsonObject(mapper.writeValueAsString(obj));
 			} catch (JsonProcessingException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				LOG.error("Error converting audit department object with ID {} to JSON string. Exception {}",
+						obj.getDeptId(), e);
 			}
 		}		
 		return record;
