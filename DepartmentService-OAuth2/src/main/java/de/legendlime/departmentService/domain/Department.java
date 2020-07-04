@@ -8,6 +8,7 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 
+
 @Entity
 @Table(name = "department", schema = "public", uniqueConstraints = @UniqueConstraint(columnNames = "deptId"))
 public class Department implements Serializable {
