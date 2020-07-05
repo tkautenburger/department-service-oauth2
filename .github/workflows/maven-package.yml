@@ -26,4 +26,4 @@ jobs:
       uses: actions/upload-artifact@v1
       with:
         name: artifact
-        path: department-service-oauth2/target/departmentservice-oauth2-0.1-SNAPSHOT.jar
+        path: department-service-oauth2/DepartmentService-OAuth2/target/departmentservice-oauth2-0.2-SNAPSHOT.jar
