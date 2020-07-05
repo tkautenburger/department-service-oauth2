@@ -1,4 +1,5 @@
 HELP.md
+target/**
 target/*.jar
 target/*.original
 target/classes/
@@ -7,6 +8,7 @@ target/generated-sources/
 target/maven-archiver/
 target/maven-status/
 ### !target/docker/**
+
 ≈!.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**
 !**/src/test/**
