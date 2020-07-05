@@ -55,4 +55,3 @@ jobs:
     - name: Publish Image to Docker Hub
       run: |
         docker push legendlime/departmentservice-oauth2:0.2-SNAPSHOT
-
