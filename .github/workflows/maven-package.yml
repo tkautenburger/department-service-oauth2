@@ -48,7 +48,7 @@ jobs:
       run: |        
         mkdir -p DepartmentService-OAuth2/target
         mv artifact/departmentservice-oauth2-0.2-SNAPSHOT.jar DepartmentService-OAuth2/target
-        docker build -t legendlime/departmentservice-oauth2:0.2-SNAPSHOT DepartmentService-OAuth2
+        docker build -t legendlime/departmentservice-oauth2:0.2-SNAPSHOT -f Dockerfile-github DepartmentService-OAuth2
     - name: Login Docker Hub
       run: |
         docker login -u -u ${{ secrets.DOCKER_HUB_USER }} -p ${{ secrets.DOCKER_HUB_PWD }} legendlime/departmentservice-oauth2:0.2-SNAPSHOT
