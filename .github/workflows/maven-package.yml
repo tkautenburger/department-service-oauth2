@@ -11,7 +11,7 @@ on:
 
 jobs:
   build:
-    name: Java 11 clean compile and package
+    name: Java 11 clean compile and package without testing
     runs-on: ubuntu-latest
 
     steps:
@@ -21,4 +21,4 @@ jobs:
       with:
         java-version: 11
     - name: Build with Maven
-      run: mvn -B clean package --file DepartmentService-OAuth2/pom.xml
+      run: mvn -DskipTests -B clean package --file DepartmentService-OAuth2/pom.xml
