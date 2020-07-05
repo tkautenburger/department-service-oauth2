@@ -31,7 +31,7 @@ jobs:
       uses: actions/upload-artifact@v1
       with:
         name: artifact
-        path: DepartmentService-OAuth2/target/${JAR_NAME}
+        path: DepartmentService-OAuth2/target/departmentservice-oauth2-0.2-SNAPSHOT.jar
         
   deploy:
     name: Build docker image and push to docker hub
@@ -47,12 +47,12 @@ jobs:
     - name: Build Docker image
       run: |        
         mkdir -p DepartmentService-OAuth2/target
-        mv artifact/${JAR_NAME} DepartmentService-OAuth2/target
-        docker build -t ${IMAGE_URL}:${IMAGE_VERSION} DepartmentService-OAuth2
+        mv artifact/departmentservice-oauth2-0.2-SNAPSHOT.jar DepartmentService-OAuth2/target
+        docker build -t legendlime/departmentservice-oauth2:0.2-SNAPSHOT DepartmentService-OAuth2
     - name: Login Docker Hub
       run: |
-        docker login -u -u ${{ secrets.DOCKER_HUB_USER }} -p ${{ secrets.DOCKER_HUB_PWD }} ${IMAGE_URL}
+        docker login -u -u ${{ secrets.DOCKER_HUB_USER }} -p ${{ secrets.DOCKER_HUB_PWD }} legendlime/departmentservice-oauth2:0.2-SNAPSHOT
     - name: Publish Image to Docker Hub
       run: |
-        docker push ${IMAGE_URL}:${IMAGE_VERSION}
+        docker push legendlime/departmentservice-oauth2:0.2-SNAPSHOT
 
