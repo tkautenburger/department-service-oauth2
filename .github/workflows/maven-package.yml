@@ -39,19 +39,27 @@ jobs:
     needs: build
     
     steps:
-    - uses: actions/checkout@v1
-    - name: Download Maven build artifact
-      uses: actions/download-artifact@v1
+#    - uses: actions/checkout@v1
+#    - name: Download Maven build artifact
+#      uses: actions/download-artifact@v1
+#      with:
+#        name: artifact
+#    - name: Build Docker image
+#      run: |        
+#        mkdir -p DepartmentService-OAuth2/target
+#        mv artifact/departmentservice-oauth2-0.2-SNAPSHOT.jar DepartmentService-OAuth2/target
+#        docker build -t legendlime/departmentservice-oauth2:0.2-SNAPSHOT -f DepartmentService-OAuth2/Dockerfile-github DepartmentService-OAuth2
+#    - name: Login Docker Hub
+#      run: |
+#        docker login -u -u ${{ secrets.DOCKER_HUB_USER }} -p ${{ secrets.DOCKER_HUB_PWD }} legendlime/departmentservice-oauth2:0.2-SNAPSHOT
+#    - name: Publish Image to Docker Hub
+#      run: |
+#        docker push legendlime/departmentservice-oauth2:0.2-SNAPSHOT
+    - uses: whoan/docker-build-with-cache-action@v5
       with:
-        name: artifact
-    - name: Build Docker image
-      run: |        
-        mkdir -p DepartmentService-OAuth2/target
-        mv artifact/departmentservice-oauth2-0.2-SNAPSHOT.jar DepartmentService-OAuth2/target
-        docker build -t legendlime/departmentservice-oauth2:0.2-SNAPSHOT -f DepartmentService-OAuth2/Dockerfile-github DepartmentService-OAuth2
-    - name: Login Docker Hub
-      run: |
-        docker login -u -u ${{ secrets.DOCKER_HUB_USER }} -p ${{ secrets.DOCKER_HUB_PWD }} legendlime/departmentservice-oauth2:0.2-SNAPSHOT
-    - name: Publish Image to Docker Hub
-      run: |
-        docker push legendlime/departmentservice-oauth2:0.2-SNAPSHOT
+        username: "${{ secrets.DOCKER_HUB_USER }}"
+        password: "${{ secrets.DOCKER_HUB_PWD }}"
+        image_name: legendlime/departmentservice-oauth2
+        image_tag: 0.2-SNAPSHOT
+        context: ./DepartmentService-OAuth2
+        dockerfile: ./DepartmentService-OAuth2/Dockerfile-github
