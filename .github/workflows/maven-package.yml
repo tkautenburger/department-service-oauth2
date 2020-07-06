@@ -39,7 +39,7 @@ jobs:
     needs: build
     
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v2
     - name: Download Maven build artifact
       uses: actions/download-artifact@v1
       with:
@@ -63,4 +63,4 @@ jobs:
         image_name: legendlime/departmentservice-oauth2
         image_tag: 0.2-SNAPSHOT
         context: ./DepartmentService-OAuth2
-        dockerfile: ./DepartmentService-OAuth2/Dockerfile-github
+        dockerfile: Dockerfile-github
