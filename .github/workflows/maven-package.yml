@@ -11,8 +11,10 @@ on:
 
 env:
   IMAGE_URL: legendlime/departmentservice-oauth2
-  IMAGE_VERSION: 0.2-SNAPSHOT
+  IMAGE_TAG: 0.2-SNAPSHOT
   JAR_NAME: departmentservice-oauth2-0.2-SNAPSHOT.jar
+  BASE_DIR: DepartmentService-OAuth2
+  DOCKERFILE: Dockerfile-github
 
 jobs:
   build:
@@ -26,12 +28,12 @@ jobs:
       with:
         java-version: 11
     - name: Build with Maven
-      run: mvn -DskipTests -B clean package --file DepartmentService-OAuth2/pom.xml
+      run: mvn -DskipTests -B clean package --file ${{ env.BASE_DIR }}/pom.xml
     - name: Upload Maven build artifact
       uses: actions/upload-artifact@v1
       with:
         name: artifact
-        path: DepartmentService-OAuth2/target/departmentservice-oauth2-0.2-SNAPSHOT.jar
+        path: ${{ env.BASE_DIR }}/target/${{ env.JAR_NAME }}
         
   deploy:
     name: Build docker image and push to docker hub
@@ -46,21 +48,14 @@ jobs:
         name: artifact
     - name: Move Docker Image
       run: |        
-        mkdir -p DepartmentService-OAuth2/target
-        mv artifact/departmentservice-oauth2-0.2-SNAPSHOT.jar DepartmentService-OAuth2/target
-#        docker build -t legendlime/departmentservice-oauth2:0.2-SNAPSHOT -f DepartmentService-OAuth2/Dockerfile-github DepartmentService-OAuth2
-#    - name: Login Docker Hub
-#      run: |
-#        docker login -u -u ${{ secrets.DOCKER_HUB_USER }} -p ${{ secrets.DOCKER_HUB_PWD }} legendlime/departmentservice-oauth2:0.2-SNAPSHOT
-#    - name: Publish Image to Docker Hub
-#      run: |
-#        docker push legendlime/departmentservice-oauth2:0.2-SNAPSHOT
+        mkdir -p ${{ env.BASE_DIR }}/target
+        mv artifact/${{ env.JAR_NAME }} ${{ env.BASE_DIR }}/target
     - name: Build Docker Image
       uses: whoan/docker-build-with-cache-action@v5
       with:
         username: "${{ secrets.DOCKER_HUB_USER }}"
         password: "${{ secrets.DOCKER_HUB_PWD }}"
-        image_name: legendlime/departmentservice-oauth2
-        image_tag: 0.2-SNAPSHOT
-        context: ./DepartmentService-OAuth2
-        dockerfile: Dockerfile-github
+        image_name: ${{ env.IMAGE_URL }}
+        image_tag: ${{ env.IMAGE_TAG }}
+        context: ./${{ env.BASE_DIR }}
+        dockerfile: ${{ env.DOCKERFILE }}
