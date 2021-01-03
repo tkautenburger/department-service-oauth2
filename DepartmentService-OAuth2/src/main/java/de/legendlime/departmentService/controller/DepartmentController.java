@@ -63,6 +63,7 @@ public class DepartmentController {
 			    produces = MediaType.APPLICATION_JSON_VALUE)
 	public List<Department> getAll(HttpServletRequest request, HttpServletResponse response) {
 
+		LOG.debug("request GET /departments");
 		audit.publishAuditMessage(auditHelper("GET", null, request, response));
 		return repo.findAll();
 	}
@@ -72,8 +73,11 @@ public class DepartmentController {
 	public Department getSingle(@PathVariable(name = "id", required = true) Long id, 
 			HttpServletRequest request, HttpServletResponse response) {
 
-		Department dept = repo.findById(id).orElseThrow(() -> 
-		  new ResourceNotFoundException(NOT_FOUND + id));
+		Department dept = repo.findById(id).orElseThrow(() -> {
+		   LOG.error(NOT_FOUND, id);
+		   return new ResourceNotFoundException(NOT_FOUND + id);
+		});
+		LOG.debug("request GET /departments/{}", id);
 		
 		audit.publishAuditMessage(auditHelper("GET", dept, request, response));
 
@@ -86,8 +90,10 @@ public class DepartmentController {
 	public Department create(@Valid @RequestBody DepartmentDTO dept, 
 			HttpServletRequest request, HttpServletResponse response) {
 
-		if (dept == null)
+		if (dept == null) {
+			LOG.error(NOT_NULL);
 			throw new IllegalArgumentException(NOT_NULL);
+		}
 		
 		// Use DTO to avoid security vulnerability 
 		// Persistent entities should not be used as arguments of "@RequestMapping" methods
@@ -95,6 +101,7 @@ public class DepartmentController {
 		persistentDept.setDeptId(dept.getDeptId());
 		persistentDept.setName(dept.getName());
 		persistentDept.setDescription(dept.getDescription());
+		LOG.debug("request POST /departments, body: ", persistentDept.toString());
 		
 		audit.publishAuditMessage(auditHelper("CREATE", persistentDept, request, response));
 
@@ -109,12 +116,15 @@ public class DepartmentController {
 			                 HttpServletRequest request, HttpServletResponse response) {
 		
 		Optional<Department> deptOpt = repo.findById(id);
-		if (!deptOpt.isPresent())
+		if (!deptOpt.isPresent()) {
+			LOG.error(NOT_FOUND, id);
 			throw new ResourceNotFoundException(NOT_FOUND + id);
+		}
 		Department d = deptOpt.get();
 		d.setDeptId(dept.getDeptId());
 		d.setName(dept.getName());
 		d.setDescription(dept.getDescription());
+		LOG.debug("request PUT /departments {}, body:{}", id, d.toString());
 
 		audit.publishAuditMessage(auditHelper("UPDATE", d, request, response));
 
@@ -127,14 +137,21 @@ public class DepartmentController {
 			HttpServletRequest request, HttpServletResponse response) {
 
 		Optional<Department> deptOpt = repo.findById(id);
-		if (!deptOpt.isPresent())
+		if (!deptOpt.isPresent()) {
+			LOG.error(NOT_FOUND, id);
 			throw new ResourceNotFoundException(NOT_FOUND + id);
+		}
 
 		repo.delete(deptOpt.get());
+		LOG.debug("request DELETE /departments/{}", id);
 		audit.publishAuditMessage(auditHelper("DELETE", deptOpt.get(), request, response));
 
 		return ResponseEntity.ok().build();
 	}
+
+	/*--------------------------------*
+	 * Auditing methods               *
+	 *--------------------------------*/
 
 	private AuditRecord auditHelper(String method, Department obj, 
 			HttpServletRequest request, HttpServletResponse response) {
