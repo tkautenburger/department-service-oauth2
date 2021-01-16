@@ -137,17 +137,21 @@ security:
   oauth2:
     resource:
       id: department-service
+      prefer-token-info: true
       token-info-uri: ${rest.security.issuer-uri}/protocol/openid-connect/token/introspect
       user-info-uri: ${rest.security.issuer-uri}/protocol/openid-connect/userinfo
+      # Get the key from the JWKS endpoint instead of having it in the static configuration
+      jwk:
+        key-set-uri: ${rest.security.issuer-uri}/protocol/openid-connect/certs
       # Your public Key may be different, remember to replace this one 
-      jwt:
-        key-value: -----BEGIN PUBLIC KEY-----MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAq0glnf0bnjjZ8izkCa93VLUIh4XKPrKmPFxqEuSbkHbHwCcSoqQGN52QHg1SSuRu6k37Eetsucw14MF+s1W0cJB8RZmgoS26OZ9IyX4LI6xbksv0/RCwWgRHfsWV7DFWnCOx9xAt6U2I+6i2P7wb9saPZdAu3xj/o41jv6uz+1clhfgLYevsWjLH7wfLG94mPtquUrKyLYRcHc5zORetYGgD6KJb+yIhOVr6KefrqwkSfXRQcwnGBbPqKOFthQfAKnN8Ta7FtMcb6/AEjx5//kA6xPmBkHP9akCPVg9DNkST0QMqY21pNFmMFx5/wC2yf9AolwLFnQDOHz73MNwp2wIDAQAB-----END PUBLIC KEY-----
+      #jwt:
+      #  key-value: -----BEGIN PUBLIC KEY-----MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAq0glnf0bnjjZ8izkCa93VLUIh4XKPrKmPFxqEuSbkHbHwCcSoqQGN52QHg1SSuRu6k37Eetsucw14MF+s1W0cJB8RZmgoS26OZ9IyX4LI6xbksv0/RCwWgRHfsWV7DFWnCOx9xAt6U2I+6i2P7wb9saPZdAu3xj/o41jv6uz+1clhfgLYevsWjLH7wfLG94mPtquUrKyLYRcHc5zORetYGgD6KJb+yIhOVr6KefrqwkSfXRQcwnGBbPqKOFthQfAKnN8Ta7FtMcb6/AEjx5//kA6xPmBkHP9akCPVg9DNkST0QMqY21pNFmMFx5/wC2yf9AolwLFnQDOHz73MNwp2wIDAQAB-----END PUBLIC KEY-----
 
 # Required for micro services that needs to call another secured micro service call
 # These parameters are not needed if this service acts only as a resource server
     client:
       client-id: department-service
-     # client-secret: <this is stored in vault>
+      # client-secret: <this is stored in vault>
       user-authorization-uri: ${rest.security.issuer-uri}/protocol/openid-connect/auth
       access-token-uri: ${rest.security.issuer-uri}/protocol/openid-connect/token
       scope: openid
