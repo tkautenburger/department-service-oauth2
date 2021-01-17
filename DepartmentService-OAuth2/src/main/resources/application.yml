@@ -163,16 +163,15 @@ security:
 
 logging:
   level:
-    de.legendlime: INFO
-    io.jaegertracing: ERROR
-    io.opentracing.contrib: ERROR
+    '[de.legendlime.departmentService]': INFO
+    '[io.opentracing]': ERROR
+    '[io.jaegertracing]': ERROR
     org:
       springframework:
         boot:
           autoconfigure:
             logging: INFO
         security: INFO
-        web.filter.CommonsRequestLoggingFilter: ERROR
       root: INFO 
 
 #--------------------------------------
