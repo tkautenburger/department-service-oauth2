@@ -1,7 +1,7 @@
 FROM openjdk:18-jdk-alpine as builder
 # OpenJDK image is about 50MB larger than alpine image
 # FROM openjdk:11-slim as builder
-WORKDIR application
+WORKDIR /application
 ARG JAR_FILE=target/@project.build.finalName@.jar
 COPY ${JAR_FILE} application.jar
 RUN java -Djarmode=layertools -jar application.jar extract
@@ -11,11 +11,11 @@ FROM openjdk:18-jdk-alpine
 # OpenJDK image is about 50MB larger than alpine image
 # FROM openjdk:11-slim
 
-WORKDIR application
-COPY --from=builder application/dependencies/ ./
-COPY --from=builder application/spring-boot-loader/ ./
-COPY --from=builder application/snapshot-dependencies/ ./
-COPY --from=builder application/application/ ./
+WORKDIR /application
+COPY --from=builder /application/dependencies/ ./
+COPY --from=builder /application/spring-boot-loader/ ./
+COPY --from=builder /application/snapshot-dependencies/ ./
+COPY --from=builder /application/application/ ./
 
 # COPY --from=builder /application/BOOT-INF/lib /app/lib
 # COPY --from=builder /application/META-INF /app/META-INF
