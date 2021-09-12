@@ -81,7 +81,7 @@ public class SecurityConfigurer extends ResourceServerConfigurerAdapter {
           .headers()
           .frameOptions().disable()
 	    .and()
-	      .csrf().disable()
+	      // .csrf().disable() CWE-352
         .authorizeRequests()
           .antMatchers(securityProperties.getApiMatcher()).authenticated()
             // next line is for OPA policy based security
@@ -98,7 +98,7 @@ public class SecurityConfigurer extends ResourceServerConfigurerAdapter {
           .headers()
           .frameOptions().disable()
 	    .and()
-	      .csrf().disable()
+	      // .csrf().disable() CWE-352
         .authorizeRequests()
           .antMatchers(securityProperties.getApiMatcher()).authenticated()
         .and()
