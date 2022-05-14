@@ -1,4 +1,4 @@
-FROM openjdk:18-jdk-alpine
+FROM openjdk:18.0-jdk
 RUN apk update && apk upgrade && apk add netcat-openbsd
 RUN mkdir -p /usr/local/@docker.image.folder@
 ADD @project.build.finalName@.jar /usr/local/@docker.image.folder@/
