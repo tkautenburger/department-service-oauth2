@@ -1,4 +1,4 @@
-FROM openjdk:18.0-jdk as builder
+FROM openjdk:21-ea-13-slim-bullseye as builder
 # OpenJDK image is about 50MB larger than alpine image
 # FROM openjdk:11-slim as builder
 WORKDIR /application
@@ -7,7 +7,7 @@ COPY ${JAR_FILE} application.jar
 RUN java -Djarmode=layertools -jar application.jar extract
 # RUN jar -xf application.jar
  
-FROM openjdk:18.0-jdk
+FROM openjdk:21-ea-13-slim-bullseye
 # OpenJDK image is about 50MB larger than alpine image
 # FROM openjdk:11-slim
 
