@@ -20,7 +20,6 @@
 		<spring-cloud.version>2021.0.5</spring-cloud.version>
 		<docker.image.prefix>legendlime</docker.image.prefix>
         <start-class>de.legendlime.departmentService.DepartmentServiceApplication</start-class>
-        <spring-graalvm-native.version>0.7.1</spring-graalvm-native.version>
 	</properties>
 
 	<dependencies>
@@ -92,13 +91,13 @@
 			<artifactId>micrometer-registry-elastic</artifactId>
 		</dependency>
 		
-		<!-- Dependencies to build graalVM native images -->
+		<!-- Dependencies to build graalVM native images 
 		<dependency>
 			<groupId>org.springframework.experimental</groupId>
 			<artifactId>spring-graalvm-native</artifactId>
 			<version>${spring-graalvm-native.version}</version>
 		</dependency>
-
+-->
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context-indexer</artifactId>
@@ -138,7 +137,11 @@
 						<enabled>true</enabled>
 					</layers>
 				</configuration>
-			</plugin>			
+			</plugin>
+			<plugin>
+    			<groupId>org.graalvm.buildtools</groupId>
+    			<artifactId>native-maven-plugin</artifactId>
+			</plugin>	
 		</plugins>
 	</build>
 
